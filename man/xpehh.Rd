@@ -33,7 +33,7 @@ FALSE turns off this feature.}
 in this analysis, and "ss.snps" for annotating only SNPs statistically significant
 (defined by 'filter' argument), or 'both' (default) for both annotation outputs.}
 
-\item{plot}{Logical scalar. If TRUE (default), then distribution plots are generated and saved
+\item{plot}{Logical scalar. If TRUE (default), then XP-EHH-related plots are generated and saved
 as png figures.}
 }
 \value{
