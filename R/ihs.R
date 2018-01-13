@@ -47,7 +47,6 @@
 
 ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T) {
 
-
     if (annot == TRUE) {
         cat(" Loading haps-sample.RData file for acquiring allele state information... \n")
         load("haplotypes/haps-sample.RData")
@@ -184,4 +183,3 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
         }
     }
 }
-
