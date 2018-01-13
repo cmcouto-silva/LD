@@ -47,7 +47,7 @@ xpehh(scanhh.RData$population1, scanhh.RData$population2)
 - XP-EHH result files
   - Simple .csv files with original results
   - Results with SNP annotation and allele state information (.xls files)
-  - Figures showing the ##################distribution plots
+  - Figures showing the XP-EHH-related plots
 - Two R binary files
   - "haps-sample.RData" 
   - "_scanhh.RData_"  
