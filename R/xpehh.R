@@ -25,7 +25,7 @@
 #' (defined by 'filter' argument), or 'both' (default) for both annotation outputs.
 #'
 #'
-#' @param plot Logical scalar. If TRUE (default), then distribution plots are generated and saved
+#' @param plot Logical scalar. If TRUE (default), then XP-EHH-related plots are generated and saved
 #' as png figures.
 #'
 #'
