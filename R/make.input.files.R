@@ -127,8 +127,8 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
     }
 
     cat("\n Updating code alleles from 0/1 to 1/2 as requestes by rehh package...\n")
-    OS <- Sys.info()
-    if (OS["sysname"] == "Linux" | OS["sysname"] == "MAC") {
+    OS <- tolower(.Platform$OS.type)
+    if (OS == "unix") {
         for (n in 1:length(populations.data)) {
             for (i in 1:length(chrs)) {
                 system(paste0("tr 01 12 < rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap > rehh_in/chr", chrs[i],
