@@ -47,8 +47,6 @@
 
 ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T) {
 
-    cat(" Loading SNPs and scanhh.RData file... \n")
-    load("./scanhh.RData")
 
     if (annot == TRUE) {
         cat(" Loading haps-sample.RData file for acquiring allele state information... \n")
