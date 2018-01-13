@@ -1,0 +1,24 @@
+Package: LD
+Type: Package
+Version: 0.0.0.9000
+Published: 2018-01-09
+Title: Linkage Disequilibrium Analysis
+Description: This package provides functions that automatize a
+    workflow of computations for linkage disequilibrium analysis.
+    It quickly computes provided functions in 'rehh' (citation)
+    package which has a set of algorithms previously described 
+    in the scientific literature.    
+Author: Cainã Max Couto-Silva
+Maintainer: Cainã Max Couto-Silva <cmcouto.silva@usp.br>
+URL: http://yihui.name/knitr/
+BugReports: https://github.com/yihui/knitr/issues
+License: GPL-2 | GPL-3
+Imports:
+    rehh,
+    gtools,
+    NCBI2R,
+    WriteXLS
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: testthat
