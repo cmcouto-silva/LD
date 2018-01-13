@@ -14,14 +14,14 @@ Supposing you're handling a dataset with chromossomes from 1 to 22, here is your
 
 ##### **Initialization:**
 ```r
-ld.start()
+ldstart()
 ```
 
 This creates five folders: 'haplotypes', 'populations', 'snps', 'rehh_in', and 'rehh_out'.
 
 Then all you have to do (manually) is to put your haplotypes' files in the 'haplotypes' folder, the populations' files in the 'populations' folder, and the target-SNPs' files in the 'snps' folder. All haplotypes' files must be in conventional  .haps/.sample format. Population and SNP's files must be text files (.txt) with one ID per line.
 
-For more details, see `help(ld.start)`
+For more details, see `help(ldstart)`
 
 
 Following workflow steps are as simple as:
