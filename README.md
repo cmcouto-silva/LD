@@ -31,7 +31,7 @@ make.binary.haplotypes()
 make.input.files()
 make.scanhh()
 
-# Load blahblahblah
+# Load 'scanhh.list'
 load("./scanhh.RData")
 
 # Computing Statistics and generating result files
