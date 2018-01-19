@@ -168,7 +168,7 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
                   SNP = rownames(ihs.snp.list.stat[[i]]), Allele_A = alleles$V4, Allele_D = alleles$V5, GENE = ihs.snp.list.stat.ncbi[[i]],
                   ihs.snp.list.stat[[i]][2:4])
             }, error = function(e) {
-                cat("\tNo SNPs have been found in", names(ld.ihs)[i], "dataset\n")
+                cat("\tNo SNPs have been found in this datasetin", names(ld.ihs)[i], "dataset\n")
             })
         }
 

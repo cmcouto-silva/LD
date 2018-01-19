@@ -196,7 +196,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
                   xpehh.bi.snp.list.ncbi.xls <- cbind(CHR = xpehh.bi.snp.list.stat$CHR, SNP = rownames(xpehh.bi.snp.list.stat),
                     Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = xpehh.bi.snp.list.stat.ncbi, xpehh.bi.snp.list.stat[2:4])
                 }, error = function(e) {
-                  cat("\tNo statistical significant SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"ss.snps\")\n")
+                  cat("\tNo statistically significant SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"ss.snps\")\n")
                 })
 
                 if (exists("xpehh.bi.snp.list.ncbi.xls")) {
@@ -242,7 +242,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
                   xpehh.uni.snp.list.stat.ncbi.xls <- cbind(CHR = xpehh.uni.snp.list.stat$CHR, SNP = rownames(xpehh.uni.snp.list.stat),
                     Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = xpehh.uni.snp.list.stat.ncbi, xpehh.uni.snp.list.stat[2:4])
                 }, error = function(e) {
-                  cat("\tNo statistical significant SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"ss.snps\")\n")
+                  cat("\tNo statistically significant SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"ss.snps\")\n")
                 })
 
                 if (exists("xpehh.uni.snp.list.stat.ncbi.xls")) {
