@@ -37,7 +37,7 @@ in this analysis, and "ss.snps" for annotating only SNPs statistically significa
 as png figures.}
 }
 \value{
-XP-EHH files: simple result files (.csv), SNP annotation (.xls) and/or iHS plots (.png).
+XP-EHH files: simple result files (.csv), SNP annotation (.xls) and/or XP-EHH plots (.png).
 }
 \description{
 This function computes XP-EHH Statistics (standardized cross-population EHH) using two populations
@@ -47,7 +47,7 @@ and target-SNPs, then performs the SNPs' annotation and generate appropriate tab
 R binary file named 'scanhh.RData' must be loaded before running this function. Populations going
 to be analyzed must be provided as 'scanhh_list$NAME', where 'NAME' is the population name (see @Examples
 section). This function creates a new directory in 'rehh_out' folder, named 'xpehh', with two sub-directories:
-'xpehh/graphics' for the plots, and 'ihs/tables' for csv and xls files.
+'xpehh/graphics' for the plots, and 'xpehh/tables' for csv and xls files.
 
 The 'method' parameter indicates which method will be applied ('bilateral', 'unilateral', or 'both';
 default = 'both'). The default value for 'filter' parameter has been set to 2 accordingly the

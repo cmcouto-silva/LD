@@ -33,7 +33,7 @@
 #' R binary file named 'scanhh.RData' must be loaded before running this function. Populations going
 #' to be analyzed must be provided as 'scanhh_list$NAME', where 'NAME' is the population name (see @@Examples
 #' section). This function creates a new directory in 'rehh_out' folder, named 'xpehh', with two sub-directories:
-#' 'xpehh/graphics' for the plots, and 'ihs/tables' for csv and xls files.
+#' 'xpehh/graphics' for the plots, and 'xpehh/tables' for csv and xls files.
 #'
 #' The 'method' parameter indicates which method will be applied ('bilateral', 'unilateral', or 'both';
 #' default = 'both'). The default value for 'filter' parameter has been set to 2 accordingly the
@@ -49,7 +49,7 @@
 #' Except by annotation argument ('annot = T'), this function usually runs very fast. However,
 #' depending on how many target-SNPs are present in the dataset, the annotation velocity may vary considerably.
 #'
-#' @return XP-EHH files: simple result files (.csv), SNP annotation (.xls) and/or iHS plots (.png).
+#' @return XP-EHH files: simple result files (.csv), SNP annotation (.xls) and/or XP-EHH plots (.png).
 #' @seealso \code{\link{make.scanhh}}
 #'
 #' @examples
@@ -182,7 +182,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
                   file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.all.xls")
                   WriteXLS::WriteXLS(xpehh.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
                     AdjWidth = T, BoldHeaderRow = T)
-                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.all.xls"), "' successfully saved into 'rehh_out/ihs/tables/' directory \n"))
+                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.all.xls"), "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
                 } else {
                   message(paste0("\t", nrow(xpehh.bi.snp.list), " SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
                 }
@@ -203,7 +203,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
                   file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.stat.xls")
                   WriteXLS::WriteXLS(xpehh.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
                     AdjWidth = T, BoldHeaderRow = T)
-                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.stat.xls"), "' successfully saved into 'rehh_out/ihs/tables/' directory \n"))
+                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.stat.xls"), "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
                 } else {
                   message(paste0("\t", nrow(xpehh.bi.snp.list.stat), " SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
                 }
@@ -227,7 +227,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
                   file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.all.xls")
                   WriteXLS::WriteXLS(xpehh.uni.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
                     AdjWidth = T, BoldHeaderRow = T)
-                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.all.xls"), "' successfully saved into 'rehh_out/ihs/tables/' directory \n"))
+                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.all.xls"), "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
                 } else {
                   message(paste0("\t", nrow(xpehh.uni.snp.list), " SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
                 }
@@ -249,7 +249,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
                   file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.stat.xls")
                   WriteXLS::WriteXLS(xpehh.uni.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
                     AdjWidth = T, BoldHeaderRow = T)
-                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.stat.xls"), "' successfully saved into 'rehh_out/ihs/tables/' directory \n"))
+                  cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.stat.xls"), "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
                 } else {
                   message(paste0("\t", nrow(xpehh.uni.snp.list.stat), " SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
                 }
