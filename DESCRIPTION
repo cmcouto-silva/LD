@@ -1,7 +1,7 @@
 Package: LD
 Type: Package
+Date: 2018-01-09
 Version: 0.0.0.9000
-Published: 2018-01-09
 Title: Linkage Disequilibrium Analysis
 Description: This package provides functions that automatize a
     workflow of computations for linkage disequilibrium analysis.
@@ -10,8 +10,8 @@ Description: This package provides functions that automatize a
     in the scientific literature.    
 Author: Cainã Max Couto-Silva
 Maintainer: Cainã Max Couto-Silva <cmcouto.silva@usp.br>
-URL: http://yihui.name/knitr/
-BugReports: https://github.com/yihui/knitr/issues
+URL: https://github.com/cmcouto-silva/LD
+BugReports: https://github.com/cmcouto-silva/LD/issues
 License: GPL-2 | GPL-3
 Imports:
     rehh,
