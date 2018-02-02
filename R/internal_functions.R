@@ -1,4 +1,3 @@
-#' @export
 cap <- function(word) {
   sapply(word, function(x) {
     vec <- unlist(strsplit(x, split = ""))
