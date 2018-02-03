@@ -52,7 +52,7 @@ make.scanhh <- function(populations = "all", chrs = 1:22, output) {
     populations <- unlist(strsplit(x = populations, split = ".txt$"))
 
     if (missing(output)) {
-        output <- LD::cap(populations)
+        output <- LD:::cap(populations)
     }
 
     if (length(populations) != length(output)) {
@@ -79,6 +79,6 @@ make.scanhh <- function(populations = "all", chrs = 1:22, output) {
         }
         comment(scanhh.list[[n]]) <- names(scanhh.list)[n]
     }
-    cat(paste0("\n R binary file 'scanhh.RData' saved into \"rehh_in\" directory\n\n"))
     save(scanhh.list, file = "scanhh.RData")
+    cat(paste0("\n R binary file 'scanhh.RData' saved into \"rehh_in\" directory\n\n"))
 }

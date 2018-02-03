@@ -70,10 +70,10 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
     names(populations.data) <- output
     rm(populations)
 
-    cat(" Loading haps-sample.RData file... ")
+    cat("  Loading haps-sample.RData file... ")
     load("./haplotypes/haps-sample.RData")
-    cat("OK\n\n")
-    cat(" Extracting data for specified populations... \n\n")
+    cat("  OK\n\n")
+    cat("  Extracting data for specified populations... \n\n")
 
     for (n in 1:length(populations.data)) {
 
@@ -81,13 +81,13 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
         phased.dataset <- mapply(function(haps, haps.info, sample, sample.info) {
 
             # Assessing individuals' position in `.sample` and respective columns in `.haps` files for Amazonians
-            pos_sample = which(sample$V2 %in% populations.data[[n]])
-            pos_in_haps_a1 = pos_sample * 2 - 1
-            pos_in_haps_a2 = pos_sample * 2
-            pos_in_haps_both_alleles = c(rbind(pos_in_haps_a1, pos_in_haps_a2))
+            pos_sample <- which(sample$V2 %in% populations.data[[n]])
+            pos_in_haps_a1 <- pos_sample * 2 - 1
+            pos_in_haps_a2 <- pos_sample * 2
+            pos_in_haps_both_alleles <- c(rbind(pos_in_haps_a1, pos_in_haps_a2))
             # Writing filtered haps & sample files
-            new.haps = cbind(haps.info, haps[, pos_in_haps_both_alleles])
-            new.sample = rbind(sample.info, sample[pos_sample, ])
+            new.haps <- cbind(haps.info, haps[, pos_in_haps_both_alleles])
+            new.sample <- rbind(sample.info, sample[pos_sample, ])
             list(new.haps, new.sample)
 
         }, haps = haps, haps.info = haps.info, sample = sample, sample.info = sample.info)
@@ -101,13 +101,13 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
 
     # Saving new haps & sample files
     if (haps.subset == T) {
-        cat(paste("\n Saving new .haps & .sample files...\n\n"))
+        cat(paste("\n  Saving new .haps & .sample files...\n\n"))
         for (n in 1:length(populations.data)) {
             for (i in 1:length(chrs)) {
-                write.table(x = new.haps[[i]], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".haps"), quote = F,
-                  row.names = F, col.names = F)
-                write.table(x = new.sample[[i]], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".sample"), quote = F,
-                  row.names = F, col.names = F)
+              data.table::fwrite(x = populations.data[[n]][[1]][[i]][, -c(1:5)], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".haps"),
+                                 sep = " ", quote = F, row.names = F, col.names = F)
+                data.table::fwrite(x = populations.data[[n]][[2]][[i]], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".sample"),
+                                   sep = " ", quote = F, row.names = F, col.names = F)
             }
         }
         for (i in 1:length(populations.data)) cat(paste0("\tNew haps/sample files created for \"", output[i], "\" population\n"))
@@ -115,35 +115,57 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
 
     # Converting and saving new haps files to .thap
 
-    cat("\n Converting and saving .thap and .sample files... \n\n")
-    for (n in 1:length(populations.data)) {
-        for (i in 1:length(chrs)) {
-            write.table(populations.data[[n]][[1]][[i]][, -c(1:5)], file = paste0("rehh_in/chr", chrs[i], "_", output[n],
-                ".rehh.thap"), quote = F, row.names = F, col.names = F)
-            write.table(populations.data[[n]][[2]][[i]], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".rehh.sample"),
-                quote = F, row.names = F, col.names = F)
-        }
-        cat(paste0("\tNew thap/sample files created for \"", output[n], "\" population\n"))
-    }
-
-    cat("\n Updating code alleles from 0/1 to 1/2 as requestes by rehh package...\n")
     OS <- tolower(.Platform$OS.type)
     if (OS == "unix") {
-        for (n in 1:length(populations.data)) {
-            for (i in 1:length(chrs)) {
-                system(paste0("tr 01 12 < rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap > rehh_in/chr", chrs[i],
-                  ".thap && mv rehh_in/chr", chrs[i], ".thap rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap; done"))
-            }
+
+      cat("\n  Converting and saving .thap and .sample files... \n\n")
+
+      for (n in 1:length(populations.data)) {
+        for (i in 1:length(chrs)) {
+          data.table::fwrite(populations.data[[n]][[1]][[i]][, -c(1:5)], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap"),
+                             sep = " ", quote = F, row.names = F, col.names = F)
+          data.table::fwrite(populations.data[[n]][[2]][[i]], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".rehh.sample"),
+                             sep = " ", quote = F, row.names = F, col.names = F)
         }
+        cat(paste0("\tNew thap/sample files created for \"", output[n], "\" population\n"))
+      }
+
+      cat("\tUpdating code alleles from 0/1 to 1/2 as requested by rehh package...")
+
+      for (n in 1:length(populations.data)) {
+        for (i in 1:length(chrs)) {
+          system(paste0("tr 01 12 < rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap > rehh_in/chr", chrs[i],
+                        ".thap && mv rehh_in/chr", chrs[i], ".thap rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap; done"))
+        }
+      }
+
+      cat(" done!")
+
+    } else {
+      cat("\n  Converting and saving .thap and .sample files... \n\n")
+      for(n in 1:length(populations.data)) {
+
+        gt <- list()
+
+        for(i in 1:length(chrs)) {
+          gt[[i]] <- apply(populations.data[[n]][[1]][[i]][, -c(1:5)], 2, function(x) {
+            ifelse(x == 1, 2, 1)})
+          data.table::fwrite(x = data.table::data.table(gt[[i]]), file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap"),
+                             sep = " ", col.names = F)
+          data.table::fwrite(x = populations.data[[n]][[2]][[i]], file = paste0("rehh_in/chr", chrs[i], "_", output[n], ".rehh.sample"),
+                             sep = " ", quote = F, row.names = F, col.names = F)
+        }
+        cat(paste0("\tNew thap/sample files created for \"", output[n], "\" population\n"))
+      }
     }
 
-    cat(paste0(" Conversion completed!\n\n"))
+    cat(paste0("  Conversion completed!\n\n"))
 
     # Making the map file
     inp <- do.call("rbind", haps.info)[, c(2, 1, 3:5)]
     write.table(inp, file = "rehh_in/mapfileR.inp", quote = F, row.names = F, col.names = F)
 
-    cat(" Map file created,\n\n")
+    cat("  Map file created,\n\n")
 
     cat(paste0("\t", (length(populations.data) * (length(chrs) * 2)) + 1, " files have been written into \"input\" directory:\n"))
     cat(paste0("\t - ", length(populations.data) * (length(chrs)), " files .thap \n"))

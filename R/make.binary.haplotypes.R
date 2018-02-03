@@ -34,7 +34,7 @@
 
 make.binary.haplotypes <- function(chrs = 1:22) {
 
-    # Empty lists for storing data
+    # Creating empty lists for storing data
     haps <- list()
     sample <- list()
     haps.info <- list()
@@ -45,7 +45,7 @@ make.binary.haplotypes <- function(chrs = 1:22) {
     files <- character()
     ids <- character()
 
-    # if (missing(chrs)) chrs <- 1:22
+    if (missing(chrs)) chrs <- 1:22
 
     for (i in 1:length(chrs)) {
         files[i] <- gtools::mixedsort(list.files(path = "haplotypes", pattern = paste0("^chr", chrs[i], "[[:alpha:][:punct:][:blank:]]*\\.haps$")))
@@ -53,31 +53,38 @@ make.binary.haplotypes <- function(chrs = 1:22) {
     }
 
     # Specifying chromosomes to be analyzed
-    chrs <- as.integer(1:22)
-    cat(paste(" Importing", length(chrs), "haplotypes...\n\n"))
+    chrs <- as.integer(chrs)
+    cat(paste("  Importing", length(chrs), "haplotypes...\n\n"))
 
-    # Reading files setwd('haplotypes/')
+    # Reading haps and sample files
+
     for (i in 1:length(files)) {
-        cat(paste("\tReading"), files[i], "&", ids[i], "files \n")
+      cat(paste("\tReading"), files[i], "&", ids[i], "files \n")
 
-        # haps (only genome)
-        haps[[i]] = read.table(paste0("haplotypes/", files[i]), as.is = T)[, -c(1:5)]
-        names(haps)[[i]] = files[i]
-        # haps (only data info)
-        haps.info[[i]] = read.table(paste0("haplotypes/", files[i]), as.is = T)[, c(1:5)]
-        names(haps.info)[[i]] = files[i]
-        # sample (only data)
-        sample[[i]] = read.table(paste0("haplotypes/", ids[i]), as.is = T)[-c(1:2), ]
-        names(sample)[[i]] = ids[i]
-        # sample (header)
-        sample.info[[i]] = read.table(paste0("haplotypes/", ids[i]), as.is = T)[c(1:2), ]
-        names(sample.info)[[i]] = ids[i]
+      # haps (only genome)
+      haps[[i]] <- data.table::fread(input = paste0("haplotypes/", files[i]), header = F, stringsAsFactors = F, drop = 1:5)
+      names(haps)[[i]] <- files[i]
+      # haps (only data info)
+      haps.info[[i]] <- data.table::fread(input = paste0("haplotypes/", files[i]), header = F, stringsAsFactors = F, select = 1:5)
+      names(haps.info)[[i]] <- files[i]
+      # sample (only data)
+      sample[[i]] <- data.table::fread(input = paste0("haplotypes/", ids[i]), header = F, stringsAsFactors = F)[-c(1:2), ]
+      names(sample)[[i]] <- ids[i]
+      # sample (header)
+      sample.info[[i]] <- data.table::fread(input = paste0("haplotypes/", ids[i]), header = F, stringsAsFactors = F)[c(1:2), ]
+      names(sample.info)[[i]] <- ids[i]
     }
 
+    haps <- lapply(haps, as.data.frame)
+    haps.info <- lapply(haps.info, as.data.frame)
+    sample <- lapply(sample, as.data.frame)
+    sample.info <- lapply(sample.info, as.data.frame)
+
     # Saving dataset
+    cat("\n  Saving binary file...")
     save(haps, haps.info, sample, sample.info, file = "haplotypes/haps-sample.RData")
 
-    cat(paste("\n", length(chrs), "haplotypes included\n"))
-    cat(" haps-sample.RData file successfully created in \"haplotypes\" directory")
+    cat(paste("\n ", length(chrs), "haplotypes included\n"))
+    cat("  haps-sample.RData file successfully created in \"haplotypes\" directory")
 
 }

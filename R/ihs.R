@@ -87,12 +87,11 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
     # Writing iHS files
 
     for (i in 1:length(ld.ihs)) {
-        write.csv(ihs.snp.list[[i]], file = paste0("./rehh_out/ihs/tables/", names(ihs.snp.list)[i], ".csv"), quote = F,
-            row.names = T)
-        write.csv(ihs.snp.list.stat[[i]], file = paste0("./rehh_out/ihs/tables/", names(ihs.snp.list.stat)[i], ".stat.csv"),
-            quote = F, row.names = T)
+        data.table::fwrite(ihs.snp.list[[i]], file = paste0("./rehh_out/ihs/tables/", names(ihs.snp.list)[i], ".csv"),
+                           quote = F, row.names = T)
+      data.table::fwrite(ihs.snp.list.stat[[i]], file = paste0("./rehh_out/ihs/tables/", names(ihs.snp.list.stat)[i], ".stat.csv"),
+                         quote = F, row.names = T)
     }
-
 
     # Plotting iHS distribution and qqplot
 
