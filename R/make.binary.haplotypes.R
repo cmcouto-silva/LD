@@ -81,10 +81,10 @@ make.binary.haplotypes <- function(chrs = 1:22) {
     sample.info <- lapply(sample.info, as.data.frame)
 
     # Saving dataset
-    cat("\n  Saving binary file...")
+    cat("\n  Saving R binary file...")
     save(haps, haps.info, sample, sample.info, file = "haplotypes/haps-sample.RData")
 
-    cat(paste("\n ", length(chrs), "haplotypes included\n"))
+    cat(paste("\n\n ", length(chrs), "haplotypes have been included\n"))
     cat("  haps-sample.RData file successfully created in \"haplotypes\" directory")
 
 }

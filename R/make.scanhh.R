@@ -43,42 +43,40 @@
 
 make.scanhh <- function(populations = "all", chrs = 1:22, output) {
 
-    if (populations[1] == "all") {
+    if (length(populations) == 1 && populations == "all") {
         populations <- list.files(path = "populations/", all.files = TRUE)
         populations <- grep(pattern = "[[:alnum:]]", x = populations, value = TRUE)
     }
 
-    populations <- tolower(populations)
-    populations <- unlist(strsplit(x = populations, split = ".txt$"))
+    populations <- rm.txt(populations)
 
-    if (missing(output)) {
-        output <- LD:::cap(populations)
-    }
+    if (missing(output)) output <- cap(populations)
 
     if (length(populations) != length(output)) {
         stop("Output length must be equal to the number of populations analyzed.")
     }
 
-    ## Loading files as R objects for each population ##
+    # Loading files as R objects for each population
 
     scanhh.list <- as.list(replicate(length(populations), NULL))
     names(scanhh.list) <- output
 
     for (n in 1:length(populations)) {
-        cat(paste0("\n# Population under analysis: ", output[n], "\n\n"))
-        for (i in 1:length(chrs)) {
-            haplohh <- rehh::data2haplohh(hap_file = paste0("./rehh_in/chr", chrs[i], "_", names(output)[n], ".rehh.thap"),
-                map_file <- "./rehh_in/mapfileR.inp", chr.name = chrs[i], haplotype.in.columns = TRUE)
-            results <- rehh::scan_hh(haplohh)
-            if (chrs[i] == min(chrs)) {
-                scanhh.list[[n]] <- results
-            } else {
-                scanhh.list[[n]] <- rbind(scanhh.list[[n]], results)
-                scanhh.list[[n]] <- scanhh.list[[n]]
-            }
+      cat(paste0("\n# Population under analysis: ", output[n], "\n\n"))
+      for (i in 1:length(chrs)) {
+        haplohh <- rehh::data2haplohh(hap_file = paste0("./rehh_in/chr", chrs[i], "_", names(output)[n], ".rehh.thap"),
+                                      map_file <- "./rehh_in/mapfileR.inp", chr.name = chrs[i], haplotype.in.columns = TRUE)
+        results <- rehh::scan_hh(haplohh)
+        if (chrs[i] == min(chrs)) {
+          scanhh.list[[n]] <- results
+        } else {
+          scanhh.list[[n]] <- rbind(scanhh.list[[n]], results)
+          scanhh.list[[n]] <- scanhh.list[[n]]
         }
-        comment(scanhh.list[[n]]) <- names(scanhh.list)[n]
+      }
+      comment(scanhh.list[[n]]) <- names(scanhh.list)[n]
     }
+
     save(scanhh.list, file = "scanhh.RData")
-    cat(paste0("\n R binary file 'scanhh.RData' saved into \"rehh_in\" directory\n\n"))
+    cat(paste0("\n  R binary file 'scanhh.RData' saved into \"rehh_in\" directory\n\n"))
 }

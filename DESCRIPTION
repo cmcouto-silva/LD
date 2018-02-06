@@ -1,6 +1,6 @@
 Package: LD
 Type: Package
-Date: 2018-01-09
+Date: 2018-01-06
 Version: 0.0.0.9000
 Title: Linkage Disequilibrium Analysis
 Description: This package provides functions that automatize a
@@ -16,7 +16,6 @@ License: GPL-2 | GPL-3
 Imports:
     rehh,
     gtools,
-    NCBI2R,
     WriteXLS
 Encoding: UTF-8
 LazyData: true
