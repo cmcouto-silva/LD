@@ -4,7 +4,7 @@
 
 #### Installation
 ```r
-# install.packages("devtools")
+if (!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("cmcouto-silva/LD")
 ```
 
