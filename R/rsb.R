@@ -23,11 +23,8 @@
 #' @param write.xls Scalar character. It could be set to "all.snps" for annotating all SNPs included
 #' in this analysis, and "ss.snps" for annotating only SNPs statistically significants
 #' (defined by 'filter' argument), or 'both' (default) for both annotation outputs.
-#'
-#'
 #' @param plot Logical scalar. If TRUE (default), then Rsb-related plots will be generated and saved
 #' as png figures.
-#'
 #'
 #' @details
 #' R binary file named 'scanhh.RData' must be loaded before running this function. Populations going
