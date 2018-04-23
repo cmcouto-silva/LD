@@ -16,8 +16,8 @@ License: GPL-2 | GPL-3
 Imports:
     rehh,
     gtools,
+    data.table,
     WriteXLS
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: testthat

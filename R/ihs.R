@@ -45,7 +45,7 @@
 #'
 #' @export
 
-ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T) {
+ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T, freqbin = 0.025, minmaf = 0.05) {
 
   if (annot == TRUE) {
     cat("  Loading haps-sample.RData file for acquiring allele state information... \n")
@@ -64,7 +64,7 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
   # Computing iHS Statistics as described by Sabeti et al. 2007
 
   cat("\n Computing iHS Statistics... \n")
-  ld.ihs <- lapply(scanhh.list, rehh::ihh2ihs)
+  ld.ihs <- lapply(scanhh.list, rehh::ihh2ihs, freqbin = freqbin, minmaf = 0.05)
 
   ihs.snp.list <- lapply(ld.ihs, function(x){
     ihs.snp.list <- x$iHS[row.names(x$iHS) %in% snp.list.data, ]
