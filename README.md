@@ -37,8 +37,8 @@ load("./scanhh.RData")
 
 # Computing Statistics and generating result files
 ihs()
-xpehh(scanhh.RData$population1, scanhh.RData$population2)
-rsb(scanhh.RData$population1, scanhh.RData$population2)
+xpehh(scanhh.list$population1, scanhh.list$population2)
+rsb(scanhh.list$population1, scanhh.list$population2)
 ```
 
 #### **At the end of this workflow you'll have:**
