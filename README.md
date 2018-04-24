@@ -67,7 +67,7 @@ to perform all set of algorithms available in 'rehh' package as they want to, gi
 choice and data manipulation.
 
 This workflow works just on Unix-based platforms (_e.g._ Linux and MAC OS).
-In the next few days will be implemented an internal-function which enables Windows users to use it as well.
+In the next few days will be implemented an internal-function that enables Windows users to use it as well.
 
 Vignettes and reproducible example files will be included soon.
 
