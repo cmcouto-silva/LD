@@ -183,13 +183,13 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
           tryCatch({
             alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(xpehh.bi.snp.list.stat), ]
             snpgenes <- snp.annot(rownames(xpehh.bi.snp.list.stat))
-            xpehh.bi.snp.list.ncbi.xls <- cbind(CHR = xpehh.bi.snp.list.stat$CHR, SNP = rownames(xpehh.bi.snp.list.stat),
+            xpehh.bi.snp.list.stat.ncbi.xls <- cbind(CHR = xpehh.bi.snp.list.stat$CHR, SNP = rownames(xpehh.bi.snp.list.stat),
             Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.bi.snp.list.stat[2:4])
           }, error = function(e) {
             cat("\tNo statistically significant SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"ss.snps\")\n")
           })
 
-          if (exists("xpehh.bi.snp.list.ncbi.xls")) {
+          if (exists("xpehh.bi.snp.list.stat.ncbi.xls")) {
             file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.stat.xls")
             WriteXLS::WriteXLS(xpehh.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
                                AdjWidth = T, BoldHeaderRow = T)
