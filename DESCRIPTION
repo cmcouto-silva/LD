@@ -18,6 +18,7 @@ Imports:
     gtools,
     data.table,
     WriteXLS
+Depends: R (>= 3.4)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
