@@ -110,7 +110,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
         quote = F, row.names = T, col.names = T)
     }
 
-      if (method == "unilateral" || method == "both") {
+    if (method == "unilateral" || method == "both") {
 
         xpehh.uni <- rehh::ies2xpehh(pop1, pop2, popname1, popname2, method = "unilateral")
         xpehh.uni.snp.list <- xpehh.uni[row.names(xpehh.uni) %in% snp.list.data, ]
@@ -129,7 +129,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
         cat(" Plotting XPEHH results... \n\n")
         dir.create(path = "rehh_out/xpehh/graphics", showWarnings = FALSE)
 
-        if(exists(xpehh.bi)) {
+        if(exists("xpehh.bi")) {
           xpehh.list <- list(xpehh.bi)
           names(xpehh.list) <- c("xpehh.bi")
 
@@ -142,12 +142,12 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
           dev.off()
       }
 
-        if(exists(xpehh.bi)) {
+        if(exists("xpehh.uni")) {
           xpehh.list <- list(xpehh.uni)
           names(xpehh.list) <- c("xpehh.uni")
 
           par(mfrow = c(1, 1))
-          rehh::xpehhplot(xpehh.list$xpehh.uni, main = names(xpehh.bi.snp.list)[3])
+          rehh::xpehhplot(xpehh.list$xpehh.uni, main = names(xpehh.uni.snp.list)[3])
           dev.set(dev.prev())
           savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.score.png"), type = "png")
           dev.off()

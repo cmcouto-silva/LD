@@ -126,27 +126,35 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, me
   ### Generating graphics ###
 
   if (plot == TRUE) {
+
     cat(" Plotting rsb results... \n\n")
     dir.create(path = "rehh_out/rsb/graphics", showWarnings = FALSE)
 
-    rsb.list <- list(rsb.bi, rsb.uni)
-    names(rsb.list) <- c("rsb.bi", "rsb.uni")
+    if(exists("rsb.bi")) {
+      rsb.list <- list(rsb.bi)
+      names(rsb.list) <- c("rsb.bi")
 
-    par(mfrow = c(1, 1))
-    rehh::rsbplot(rsb.list$rsb.bi, main = names(rsb.bi.snp.list)[3])
-    dev.set(dev.prev())
-    savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi.score.png"), type = "png")
-    dev.off()
-    savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi.log.png"), type = "png")
-    dev.off()
+      par(mfrow = c(1, 1))
+      rehh::rsbplot(rsb.list$rsb.bi, main = names(rsb.bi.snp.list)[3])
+      dev.set(dev.prev())
+      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi.score.png"), type = "png")
+      dev.off()
+      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi.log.png"), type = "png")
+      dev.off()
+    }
 
-    par(mfrow = c(1, 1))
-    rehh::rsbplot(rsb.list$rsb.uni, main = names(rsb.bi.snp.list)[3])
-    dev.set(dev.prev())
-    savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni.score.png"), type = "png")
-    dev.off()
-    savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni.log.png"), type = "png")
-    dev.off()
+    if(exists("rsb.uni")) {
+      rsb.list <- list(rsb.uni)
+      names(rsb.list) <- c("rsb.uni")
+
+      par(mfrow = c(1, 1))
+      rehh::rsbplot(rsb.list$rsb.uni, main = names(rsb.uni.snp.list)[3])
+      dev.set(dev.prev())
+      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni.score.png"), type = "png")
+      dev.off()
+      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni.log.png"), type = "png")
+      dev.off()
+    }
   }
 
   # SNP Annotation
