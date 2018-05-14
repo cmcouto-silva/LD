@@ -132,21 +132,31 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
         xpehh.list <- list(xpehh.bi, xpehh.uni)
         names(xpehh.list) <- c("xpehh.bi", "xpehh.uni")
 
-        par(mfrow = c(1, 1))
-        rehh::xpehhplot(xpehh.list$xpehh.bi, main = names(xpehh.bi.snp.list)[3])
-        dev.set(dev.prev())
-        savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi.score.png"), type = "png")
-        dev.off()
-        savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi.log.png"), type = "png")
-        dev.off()
+        if(exists(xpehh.bi)) {
+          xpehh.list <- list(xpehh.bi)
+          names(xpehh.list) <- c("xpehh.bi")
 
-        par(mfrow = c(1, 1))
-        rehh::xpehhplot(xpehh.list$xpehh.uni, main = names(xpehh.bi.snp.list)[3])
-        dev.set(dev.prev())
-        savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.score.png"), type = "png")
-        dev.off()
-        savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.log.png"), type = "png")
-        dev.off()
+          par(mfrow = c(1, 1))
+          rehh::xpehhplot(xpehh.list$xpehh.bi, main = names(xpehh.bi.snp.list)[3])
+          dev.set(dev.prev())
+          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi.score.png"), type = "png")
+          dev.off()
+          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi.log.png"), type = "png")
+          dev.off()
+      }
+
+        if(exists(xpehh.bi)) {
+          xpehh.list <- list(xpehh.uni)
+          names(xpehh.list) <- c("xpehh.uni")
+
+          par(mfrow = c(1, 1))
+          rehh::xpehhplot(xpehh.list$xpehh.uni, main = names(xpehh.bi.snp.list)[3])
+          dev.set(dev.prev())
+          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.score.png"), type = "png")
+          dev.off()
+          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.log.png"), type = "png")
+          dev.off()
+      }
     }
 
     # SNP Annotation
