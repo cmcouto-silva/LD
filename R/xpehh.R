@@ -129,9 +129,6 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
         cat(" Plotting XPEHH results... \n\n")
         dir.create(path = "rehh_out/xpehh/graphics", showWarnings = FALSE)
 
-        xpehh.list <- list(xpehh.bi, xpehh.uni)
-        names(xpehh.list) <- c("xpehh.bi", "xpehh.uni")
-
         if(exists(xpehh.bi)) {
           xpehh.list <- list(xpehh.bi)
           names(xpehh.list) <- c("xpehh.bi")
