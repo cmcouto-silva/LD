@@ -49,8 +49,7 @@ make.scanhh <- function(populations = "all", chrs = 1:22, output) {
     }
 
     populations <- rm.txt(populations)
-
-    if (missing(output)) output <- cap(populations)
+    output <- cap(populations)
 
     if (length(populations) != length(output)) {
         stop("Output length must be equal to the number of populations analyzed.")
