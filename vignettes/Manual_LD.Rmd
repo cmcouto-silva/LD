@@ -1,0 +1,135 @@
+---
+title: "Manual of LD Package"
+author: "Cainã Max Couto-Silva"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Manual of LD Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Did you phased your data using Shapeit? Then with `LD` package you can easily perform all linkage disequilibrium analyses for any conjunt of populations/SNPs you want to! It's quite practical, you just needs to make organize your files and make a few clicks.
+
+This package aims to 
+
+<br>
+
+# 1. Input Files
+
+There are just three kinds of input files in order to run the entire pipeline:
+
+- Genetic data (.haps/.sample ─ stardard output from [Shapeit](www.google.com) software)
+- Text file with populations 
+- Text file with SNPs
+
+[Shapeit¹](www.google.com) is a software widely used for phasing genetic data. As standard, it provide as output .haps and .sample files. If you use another software for phasing, you must convert them to this format. 
+
+If you want to adjust ancestral and derived alleles according to the reference genome (_e.g._ Ensembl) (which I highly recommend to!), we provide a function to do this. You can simply use:
+
+adjust_snps(file, reference, out)
+
+> where file is X, reference is Ensembl table with columns , and out is the desired name to output file.
+
+Reference Ensembl table can be obtained following this script, using BiomaRt package: link.
+The function `adjust_snps()` ignores all columns which not match specifically the column names "x", "y", and "z", as standar of output from biomaRt. Addiotionaly, this file can be tab-delimited, space-delimited, or comma-delimited (csv). 
+
+If you use another software for phasing, you must convert them to haps/sample format. Otherwise you can use the original rehh function for loading files, which has more options for inputing files from other formats.
+
+<br/>
+
+# Pipeline
+
+You can run the entire pipeline as simples as:
+
+```{r pipeline, eval=FALSE}
+
+# Load library
+library(LD)
+
+ld.start()
+make.binary.haplotypes()
+make.input.files()
+make.scanhh()
+
+# Load scanhh.list file
+load("scanhh.R")
+
+# iHS test
+ihs()
+
+# XP-EHH and Rsb tests
+xpehh(scanhh$pop1, scanhh$pop2)
+rsb(scanhh$pop1, scanhh$pop2)
+
+```
+
+### ld.start()
+
+This function simply creates the folders required for running the analysis. In summary, `ld.start()` creates five folders: 'haplotypes', 'populations', 'snps', 'rehh_in', and 'rehh_out'. Then all you have to do (manually) is to organize the three kinds of input files inside their respective folders.
+
+Genetic data must be placed in 'haplotypes' folder. Population text files must be placed in the 'populations' folder, and the target-SNPs' files in the 'snps' folder. All haplotypes' files (genetic data) must be in the conventional .haps/.sample format (standard output from Shapeit Sofware). Population and SNP's files must be written as text files (.txt) with a single ID per line. Take a look in the example files!
+
+For more details, see `help(ldstart)`
+
+
+
+
+
+
+
+
+Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+
+- Never uses retina figures
+- Has a smaller default figure size
+- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))

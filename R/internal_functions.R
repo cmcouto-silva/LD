@@ -9,7 +9,7 @@ rm.txt <- function(file.txt) {
   if (any(grep(".txt$", file.txt))) {
     tolower(unlist(strsplit(x = file.txt, split = ".txt$")))
   } else {
-    return(file)
+    return(file.txt)
   }
 }
 
