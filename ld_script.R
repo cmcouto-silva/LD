@@ -1,6 +1,8 @@
 # Package Working Directory
 setwd("~/cmcouto.silva@usp.br/R/packages/LD")
 devtools::document()
+devtools::load_all()
+
 
 # setwd("~/cmcouto.silva@usp.br/lab_files/all_datasets/HGDP_NAM/ld_analysis/")
 #

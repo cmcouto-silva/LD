@@ -1,6 +1,13 @@
+#' @export
+
 snp.annot <- function(snpIDs) {
 
-  url <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?", "db=snp&id=", paste(snpIDs, collapse = ','), "&report=DocSet")
+  if(!is.numeric(length(snpIDs)) || length(snpIDs) == 0) stop("Length of SNP vector must be equal or greater than 1.")
+  if(!all(grepl("^rs", snpIDs))) stop("All SNPs must be codified as Reference SNP ID (starting with 'rs').")
+
+  snp_annot_function <-  function(snp_ids) {
+
+  url <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?", "db=snp&id=", paste(snp_ids, collapse = ','), "&report=DocSet")
   annot <- readLines(url)
 
   indexes <- grep(pattern = "^rs", annot)
@@ -24,7 +31,26 @@ snp.annot <- function(snpIDs) {
     }
   })
 
-  annotation <- do.call(c, annot.list)
+  return(do.call(c, annot.list))
+  }
+
+  i <- 0L
+  annotation <- character()
+
+  while(i < length(snpIDs)) {
+
+    if((i+250L) > length(snpIDs)) {
+      j <- i + abs(length(snpIDs) - i)
+    } else {
+      j <- i + 250L
+    }
+
+    annotation <- append(annotation, snp_annot_function(snpIDs[(i+1):j]) )
+
+    i <- j
+
+  }
+
   return(annotation)
 
 }
