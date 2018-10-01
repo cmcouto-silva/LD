@@ -1,13 +1,14 @@
 #' @export
 
-snp.annot <- function(snpIDs) {
+snp.annot <- function(snpIDs, batchsize = 250L) {
 
   if(!is.numeric(length(snpIDs)) || length(snpIDs) == 0) stop("Length of SNP vector must be equal or greater than 1.")
   if(!all(grepl("^rs", snpIDs))) stop("All SNPs must be codified as Reference SNP ID (starting with 'rs').")
 
   snp_annot_function <-  function(snp_ids) {
 
-  url <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?", "db=snp&id=", paste(snp_ids, collapse = ','), "&report=DocSet")
+  url <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?", "db=snp&id=", paste(snp_ids, collapse = ','),
+                "&report=DocSet", "&tool=LD&email=cmcouto.silva@gmail.com")
   annot <- readLines(url)
 
   indexes <- grep(pattern = "^rs", annot)
@@ -39,10 +40,10 @@ snp.annot <- function(snpIDs) {
 
   while(i < length(snpIDs)) {
 
-    if((i+250L) > length(snpIDs)) {
+    if( (i+batchsize) > length(snpIDs) ) {
       j <- i + abs(length(snpIDs) - i)
     } else {
-      j <- i + 250L
+      j <- i + batchsize
     }
 
     annotation <- append(annotation, snp_annot_function(snpIDs[(i+1):j]) )
