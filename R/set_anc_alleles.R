@@ -15,7 +15,7 @@
 #' out <- "out_folder/newfile"
 #'
 #' set_anc_alleles(haps, ref, out)
-#'}
+#' }
 #' @return Dataset with adjusted ancestral/derived alleles.
 #' @import data.table
 #' @importFrom magrittr set_names %>% %<>%

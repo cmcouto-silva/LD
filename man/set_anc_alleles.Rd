@@ -24,6 +24,7 @@ and excluding SNPs without ancestral information from dataset.
 To obtain the Ensembl annotation for ancestral/derived SNPs, please check the function avaialable at:
 https://github.com/cmcouto-silva/scripts/blob/master/ensembl_anc_allele.R
 }
+<<<<<<< HEAD
 \examples{
 \dontrun{
 haps <- "dataset/mydataset_phased.haps"
@@ -33,6 +34,8 @@ out <- "out_folder/newfile"
 set_anc_alleles(haps, ref, out)
 }
 }
+=======
+>>>>>>> 6a3c5b958a638154d2d1a938b411d19ab796e3ed
 \author{
 Cainã Max Couto-Silva
 }
