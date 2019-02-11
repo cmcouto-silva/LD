@@ -22,10 +22,6 @@
 #' @export
 #' @author Cainã Max Couto-Silva
 
-sfile = "dataset/allchrs_phased"
-ref = "dataset/grch38.txt"
-out = "haplotypes/allchrs_adj"
-
 set_anc_alleles <- function(sfile, ref, out) {
   
   # Dealing with extensions
@@ -78,3 +74,4 @@ set_anc_alleles <- function(sfile, ref, out) {
   fwrite(x = haps, file = paste0(out, ".haps"), quote = F, sep = " ", row.names = F, col.names = F)
   fwrite(x = sample, file = paste0(out, ".sample"), quote = F, sep = " ", row.names = F, col.names = F)
 }
+
