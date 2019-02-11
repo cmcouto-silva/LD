@@ -39,7 +39,7 @@ set_anc_alleles <- function(sfile, ref, out) {
   
   # Reading refecence panel
   ref <- fread(ref)[refsnp_id %in% haps[, SNP]][
-    !grepl("^CHR", chr_name)]
+    !grepl("[A-z]", chr_name)]
   
   # Equalize SNPs
   haps <- haps[SNP %in% ref[, refsnp_id]] # select only mutual alleles
