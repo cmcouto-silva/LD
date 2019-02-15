@@ -4,17 +4,17 @@
 \alias{set_anc_alleles}
 \title{Adjust Ancentral/Derived Alleles According to Reference}
 \usage{
-set_anc_alleles(haps, ref, out)
+set_anc_alleles(sfile, ref, out)
 }
 \arguments{
-\item{haps}{Scalar character with the name of the dataset file (.haps).}
+\item{sfile}{Scalar character with the name of the dataset file on Shapeit format without extension (.haps/.sample).}
 
 \item{ref}{Scalar character with the name of reference file (obtained by biomart R Package).}
 
 \item{out}{Scalar character with desired name for the output file (without extension).}
 }
 \value{
-Dataset with adjusted ancestral/derived alleles.
+Dataset with adjusted ancestral/derived alleles (.haps and .sample files).
 }
 \description{
 This function uses a reference file obtained from biomart R Package, setting up ancestral alleles,
@@ -24,18 +24,15 @@ and excluding SNPs without ancestral information from dataset.
 To obtain the Ensembl annotation for ancestral/derived SNPs, please check the function avaialable at:
 https://github.com/cmcouto-silva/scripts/blob/master/ensembl_anc_allele.R
 }
-<<<<<<< HEAD
 \examples{
 \dontrun{
-haps <- "dataset/mydataset_phased.haps"
+haps <- "dataset/mydataset_phased"
 ref <- "reference_panels/ensembl_annot.txt"
 out <- "out_folder/newfile"
 
-set_anc_alleles(haps, ref, out)
+set_anc_alleles(sfile, ref, out)
 }
 }
-=======
->>>>>>> 6a3c5b958a638154d2d1a938b411d19ab796e3ed
 \author{
 Cainã Max Couto-Silva
 }
