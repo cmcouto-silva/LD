@@ -40,18 +40,18 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
   if (nbr_chrm > 1) {
     
     if(file.type == 'png') {
-      file.name <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".ihsplot"), paste0(file.name, ".score.png"))
-      png(file.name, width = 1200, height = 600, pointsize = 16)
+      filename <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.png"))
+      png(filename, width = 1200, height = 600, pointsize = 16)
     }
     
     if(file.type == 'svg') {
-      file.name <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".ihsplot"), paste0(file.name, ".score.svg"))
-      svg(file.name, width = 1200, height = 600, pointsize = 16)
+      filename <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.svg"))
+      svg(filename, width = 1200, height = 600, pointsize = 16)
     }
     
     if(file.type == 'pdf') {
-      file.name <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".ihsplot"), paste0(file.name, ".score.pdf"))
-      pdf(file.name, width = 1200, height = 600, pointsize = 16)
+      filename <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.pdf"))
+      pdf(filename, width = 1200, height = 600, pointsize = 16)
     }
     
     par(mar = c(5, 5, 4, 2) + 0.1)
@@ -64,18 +64,18 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
     if (plot.pval) {
    
       if(file.type == 'png') {
-        file.name <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".ihsplot"), paste0(file.name, ".log.png"))
-        png(file.name, width = 1200, height = 600, pointsize = 16)
+        filename <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.png"))
+        png(filename, width = 1200, height = 600, pointsize = 16)
       }
       
       if(file.type == 'svg') {
-        file.name <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".ihsplot"), paste0(file.name, ".log.svg"))
-        svg(file.name, width = 1200, height = 600, pointsize = 16)
+        filename <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.svg"))
+        svg(filename, width = 1200, height = 600, pointsize = 16)
       }
       
       if(file.type == 'pdf') {
-        file.name <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".ihsplot"), paste0(file.name, ".log.pdf"))
-        pdf(file.name, width = 1200, height = 600, pointsize = 16)
+        filename <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.pdf"))
+        pdf(filename, width = 1200, height = 600, pointsize = 16)
       }
       
       par(mar = c(5, 5, 4, 2) + 0.1)
@@ -107,18 +107,18 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
     }
     
     if(file.type == 'png') {
-      file.name <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".ihsplot"), paste0(file.name, ".score.png"))
-      png(file.name, width = 1200, height = 600, pointsize = 16)
+      filename <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.png"))
+      png(filename, width = 1200, height = 600, pointsize = 16)
     }
     
     if(file.type == 'svg') {
-      file.name <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".ihsplot"), paste0(file.name, ".score.svg"))
-      svg(file.name, width = 1200, height = 600, pointsize = 16)
+      filename <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.svg"))
+      svg(filename, width = 1200, height = 600, pointsize = 16)
     }
     
     if(file.type == 'pdf') {
-      file.name <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".ihsplot"), paste0(file.name, ".score.pdf"))
-      pdf(file.name, width = 1200, height = 600, pointsize = 16)
+      filename <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.pdf"))
+      pdf(filename, width = 1200, height = 600, pointsize = 16)
     }
     
     par(mar = c(5, 5, 4, 2) + 0.1)
@@ -133,18 +133,18 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
     if (plot.pval) {
  
       if(file.type == 'png') {
-        file.name <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".ihsplot"), paste0(file.name, ".log.png"))
-        png(file.name, width = 1200, height = 600, pointsize = 16)
+        filename <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.png"))
+        png(filename, width = 1200, height = 600, pointsize = 16)
       }
       
       if(file.type == 'svg') {
-        file.name <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".ihsplot"), paste0(file.name, ".log.svg"))
-        svg(file.name, width = 1200, height = 600, pointsize = 16)
+        filename <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.svg"))
+        svg(filename, width = 1200, height = 600, pointsize = 16)
       }
       
       if(file.type == 'pdf') {
-        file.name <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".ihsplot"), paste0(file.name, ".log.pdf"))
-        pdf(file.name, width = 1200, height = 600, pointsize = 16)
+        filename <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.pdf"))
+        pdf(filename, width = 1200, height = 600, pointsize = 16)
       }
       
       par(mar = c(5, 5, 4, 2) + 0.1)

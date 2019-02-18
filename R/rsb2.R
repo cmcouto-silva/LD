@@ -177,7 +177,7 @@ rsb2 <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, m
             snpgenes <- LD:::snp.annot(rownames(rsb.bi.snp.list.stat))
             rsb.bi.snp.list.stat.ncbi.xls <- cbind(CHR = rsb.bi.snp.list.stat$CHR, SNP = rownames(rsb.bi.snp.list.stat),
                                                    Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.bi.snp.list.stat[2:4])
-            file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.all.xls")
+            file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.stat.xls")
             WriteXLS::WriteXLS(rsb.bi.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis", AdjWidth = T, BoldHeaderRow = T)
             cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.bi.all.xls"),"' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
           } else {
