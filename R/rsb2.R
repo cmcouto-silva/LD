@@ -83,6 +83,12 @@ rsb2 <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, m
     popname2 <- comment(pop2)
   }
   
+  if (!method %in% c("unilateral","bilateral","both"))
+    stop('method must be "unilateral", "bilateral", or "both".')
+  
+  if (!plot.format %in% c("png", "jpeg", "tiff", "pdf", "svg", "ps", "x11", "win"))
+    stop('File type not supported! Supporterd formats: "png", "jpeg", "tiff", "pdf", "svg", "ps", "x11", and "win".')
+  
   if (length(snp.list) == 1 && snp.list == "all") {
     snp.list <- list.files(path = "snps/", all.files = TRUE)
     snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
