@@ -43,7 +43,7 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
     filename <- ifelse(test = substrRight(file.name, 4L) == paste0(".", file.type), 
                        yes = paste0(file.name, ".rsbplot"), no = paste0(file.name, paste0(".score.", file.type)))
     
-    Cairo::Cairo(file = filename, type = file.type, width = 1200, height = 600, units = "px", pointsize = 14)
+    Cairo::Cairo(file = filename, type = file.type, width = 1200, height = 600, units = "px", pointsize = 14, dpi = 72)
     
     par(mar = c(5, 5, 4, 2) + 0.1)
     plot(pos, rsb.data[, 3], pch = pch, cex = cex, las = 1, col = col_chr, xaxt = "n", xlab = "Chromosome", 
@@ -58,7 +58,7 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
       filename <- ifelse(test = substrRight(file.name, 4L) == paste0(".", file.type), 
                          yes = paste0(file.name, ".rsbplot"), no = paste0(file.name, paste0(".log.", file.type)))
       
-      Cairo::Cairo(file = filename, type = file.type, width = 1200, height = 600, units = "px", pointsize = 14)
+      Cairo::Cairo(file = filename, type = file.type, width = 1200, height = 600, units = "px", pointsize = 14, dpi = 72)
       
       par(mar = c(5, 5, 4, 2) + 0.1)
       plot(pos, rsb.data[, 4], pch = pch, cex = cex, las = 1, col = col_chr, xaxt = "n", xlab = "Chromosome", 
