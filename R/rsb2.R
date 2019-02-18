@@ -64,7 +64,7 @@
 #' @export
 #'
 
-rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both", annot = T, write.xls = "both",
+rsb2 <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both", annot = T, write.xls = "both",
                 plot = T, plot.format = "png") {
   
   if (missing(pop1)) {
