@@ -65,7 +65,7 @@
 #'
 
 rsb2 <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both", annot = T, write.xls = "both",
-                plot = T, plot.format = "png") {
+                 plot = T, plot.format = "png") {
   
   if (missing(pop1)) {
     stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop1 = scanhh_list$population1")
@@ -80,8 +80,7 @@ rsb2 <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, m
   }
   
   if (missing(popname2)) {
-    popname2 <- comment(pop2)#' @usage xpehh(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both",
-    #' annot = T, write.xls = "both", plot = T)
+    popname2 <- comment(pop2)
   }
   
   if (!method %in% c("unilateral","bilateral","both"))
