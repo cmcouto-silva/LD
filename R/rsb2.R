@@ -80,7 +80,8 @@ rsb2 <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, m
   }
   
   if (missing(popname2)) {
-    popname2 <- comment(pop2)
+    popname2 <- comment(pop2)#' @usage xpehh(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both",
+    #' annot = T, write.xls = "both", plot = T)
   }
   
   if (!method %in% c("unilateral","bilateral","both"))

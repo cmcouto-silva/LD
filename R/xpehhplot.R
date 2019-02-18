@@ -85,15 +85,7 @@ xpehhplot <- function (xpehh.data, file.name, file.type = 'png', plot.pval = TRU
       unit = "(Mb)"
     }
     else {
-      scale <- 1eif (colnames(xpehh.data)[4] == "-log10(p-value) [bilateral]") {
-        yleg = expression("-" * log[10] * "[1" ~ "-" ~ "2" ~ "|" ~ 
-                            Phi[scriptstyle(italic(XP-EHH))] ~ "-" ~ 0.5 * "|]")
-      } else if (colnames(xpehh.data)[4] == "-log10(p-value) [unilateral]") {
-        yleg = expression("-" * log[10] * "[1" ~ "-" ~ Phi[scriptstyle(italic(XP-EHH))] * "|]")
-      } else {
-        warning("Unrecognized column name for p-values: plot.pval has been turned off")
-        plot.pval = FALSE
-      }+09
+      scale <- 1e+09
       unit = "(Gb)"
     }
     
