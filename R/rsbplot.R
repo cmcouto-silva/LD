@@ -1,4 +1,4 @@
-rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, ylim.scan = 2, pch = 16, cex = 0.35, 
+rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, ylim.scan = 2, pch = 16, cex = 0.3, 
           cex.lab = 1.25, main = NA, cex.main = 1.5, cex.axis = 1) {
   
   substrRight <- function(x, n) substr(x, nchar(x)-n+1, nchar(x))
@@ -89,56 +89,36 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
       unit = "(Gb)"
     }
     
-    if(file.type == 'png') {
-      filename <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.png"))
-      png(filename, width = 1200, height = 600, pointsize = 16)
-    }
+    # Plot
+    filename <- ifelse(test = substrRight(file.name, 4L) == paste0(".", file.type), 
+                       yes = paste0(file.name, ".rsbplot"), no = paste0(file.name, paste0(".score.", file.type)))
     
-    if(file.type == 'svg') {
-      filename <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.svg"))
-      svg(filename, width = 1200, height = 600, pointsize = 16)
-    }
-    
-    if(file.type == 'pdf') {
-      filename <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".rsbplot"), paste0(file.name, ".score.pdf"))
-      pdf(filename, width = 1200, height = 600, pointsize = 16)
-    }
+    Cairo::Cairo(file = filename, type = file.type, width = 1200, height = 600, units = "px", pointsize = 14, dpi = 72)
     
     par(mar = c(5, 5, 4, 2) + 0.1)
-    
     plot(pos/scale, rsb.data[, 3], pch = pch, col = col_chr, 
          xlab = paste("Position", unit), ylab = expression(italic(Rsb)), 
          cex.lab = cex.lab, main = main, cex.main = cex.main, cex.axis = cex.axis)
-    
+    axis(1, at = pos_labels, labels = lst_chrm, las = 1, cex.lab = cex.lab, cex.axis = 0.5)
     abline(h = c(-ylim.scan, ylim.scan), lty = 2)
     dev.off()
     
     if (plot.pval) {
  
-      if(file.type == 'png') {
-        filename <- ifelse(substrRight(file.name, 4L) == ".png", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.png"))
-        png(filename, width = 1200, height = 600, pointsize = 16)
-      }
+      # Plot
+      filename <- ifelse(test = substrRight(file.name, 4L) == paste0(".", file.type), 
+                         yes = paste0(file.name, ".rsbplot"), no = paste0(file.name, paste0(".log.", file.type)))
       
-      if(file.type == 'svg') {
-        filename <- ifelse(substrRight(file.name, 4L) == ".svg", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.svg"))
-        svg(filename, width = 1200, height = 600, pointsize = 16)
-      }
-      
-      if(file.type == 'pdf') {
-        filename <- ifelse(substrRight(file.name, 4L) == ".pdf", paste0(file.name, ".rsbplot"), paste0(file.name, ".log.pdf"))
-        pdf(filename, width = 1200, height = 600, pointsize = 16)
-      }
+      Cairo::Cairo(file = filename, type = file.type, width = 1200, height = 600, units = "px", pointsize = 14, dpi = 72)
       
       par(mar = c(5, 5, 4, 2) + 0.1)
-      
       plot(pos/scale, rsb.data[, 4], pch = pch, col = col_chr, 
            xlab = paste("Position", unit), ylab = expression(-log[10] ~ "(" * italic(p) * "-value)"), 
            cex.lab = cex.lab, main = main, cex.main = cex.main, cex.axis = cex.axis)
-      
+      axis(1, at = pos_labels, labels = lst_chrm, las = 1, cex.lab = cex.lab, cex.axis = 0.5)
       abline(h = c(-ylim.scan, ylim.scan), lty = 2)
-      
       dev.off()
+
     }
   }
   
