@@ -60,7 +60,7 @@ ihs <- function(snp.list = NULL, pop = NULL, filter = 2, annot = T, write.xls = 
     stop('File type not supported! Supporterd formats: "png", "jpeg", "tiff", "pdf", "svg", "ps", and "win".')
   
   # Loading Target-SNPs
-  if (length(snp.list) == 1 && is.null(snp.list)) {
+  if (is.null(snp.list)) {
     snp.list <- list.files(path = "snps/", all.files = TRUE)
     snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
     snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
