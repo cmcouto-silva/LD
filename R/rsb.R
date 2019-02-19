@@ -109,11 +109,6 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = NULL, filter = 2L, me
   available_SNPs <- intersect(dataSNPs, snp.list.data)
   if ( length(available_SNPs) == 0L ) stop("There are no target-SNPs in the dataset.")
   
-  # Checking if there are any target-SNP on dataset
-  dataSNPs <- row.names(scanhh.list[[1]])
-  available_SNPs <- intersect(dataSNPs, snp.list.data)
-  if ( length(available_SNPs) == 0L ) stop("There are no target-SNPs in the dataset.")
-  
   # Computing Rsb Statistics as described by Tang et al. 2007
   cat("\n Computing Rsb Statistics... \n")
   dir.create(path = "rehh_out/rsb", showWarnings = F)
