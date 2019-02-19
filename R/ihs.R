@@ -92,7 +92,7 @@ ihs <- function(snp.list = NULL, pop = NULL, filter = 2, annot = T, write.xls = 
     haps.info.alleles <- data.table::rbindlist(haps.info)
   }
   
-  # Computing iHS Statistics as described by Sabeti et al. 2007
+  # Computing iHS Statistics as described by Voight et al. 2006
   cat("\n Computing iHS Statistics... \n")
   ld.ihs <- lapply(scanhh.list.ihs, rehh::ihh2ihs, freqbin = freqbin, minmaf = minmaf)
   

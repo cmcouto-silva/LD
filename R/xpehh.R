@@ -64,8 +64,14 @@
 #' @export
 #'
 
-xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both", annot = T, write.xls = "both",
+xpehh <- function(pop1, pop2, popname1, popname2, snp.list = NULL, filter = 2, method = "bilateral", annot = T, write.xls = "ss.snps",
                    plot = T, plot.format = "png") {
+  
+  if(!plot %in% c(T,F))
+    stop("plot must be TRUE or FALSE.")
+  
+  if(!annot %in% c(T,F))
+    stop("annot must be TRUE or FALSE.")
   
   if (missing(pop1)) {
     stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop1 = scanhh_list$population1")
@@ -89,7 +95,8 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
   if (!plot.format %in% c("png", "jpeg", "tiff", "pdf", "svg", "ps", "win"))
     stop('File type not supported! Supporterd formats: "png", "jpeg", "tiff", "pdf", "svg", "ps", and "win".')
   
-  if (length(snp.list) == 1 && snp.list == "all") {
+  # Loading Target-SNPs
+  if (length(snp.list) == 1 && is.null(snp.list)) {
     snp.list <- list.files(path = "snps/", all.files = TRUE)
     snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
     snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
@@ -97,6 +104,12 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
     snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
   }
   
+  # Check if there are any target-SNP on dataset
+  dataSNPs <- row.names(scanhh.list[[1]])
+  available_SNPs <- intersect(dataSNPs, snp.list.data)
+  if ( length(available_SNPs) == 0L ) stop("There are no target-SNPs in the dataset.")
+  
+  # Computing Rsb Statistics as described by Sabeti et al. 2007
   cat("\n Computing XP-EHH Statistics... \n")
   dir.create(path = "rehh_out/xpehh", showWarnings = F)
   dir.create(path = "rehh_out/xpehh/tables", showWarnings = F)
@@ -137,7 +150,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
   
   ### Generating graphics ###
   
-  if (plot == TRUE) {
+  if (plot) {
     
     cat(" Plotting xpehh results... \n\n")
     dir.create(path = "rehh_out/xpehh/graphics", showWarnings = FALSE)
@@ -156,7 +169,7 @@ xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, 
   
   # SNP Annotation
   
-  if (annot == T) {
+  if (annot) {
     load("haplotypes/haps-sample.RData")
     haps.info.alleles <- data.table::rbindlist(haps.info)
     
