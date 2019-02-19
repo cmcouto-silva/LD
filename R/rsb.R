@@ -110,7 +110,7 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = NULL, filter = 2L, me
   if ( length(available_SNPs) == 0L ) stop("There are no target-SNPs in the dataset.")
   
   # Checking if there are any target-SNP on dataset
-  dataSNPs <- row.names(scanhh.list.ihs[[1]])
+  dataSNPs <- row.names(scanhh.list[[1]])
   available_SNPs <- intersect(dataSNPs, snp.list.data)
   if ( length(available_SNPs) == 0L ) stop("There are no target-SNPs in the dataset.")
   
