@@ -45,7 +45,7 @@
 #'
 #' @export
 
-ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T, plot.format =  "png", freqbin = 0.025, minmaf = 0.05) {
+ihs <- function(snp.list = NULL, pop = NULL, filter = 2, annot = T, write.xls = "both", plot = T, plot.format =  "png", freqbin = 0.025, minmaf = 0.05) {
   
   if(!plot %in% c(T,F))
     stop("plot must be TRUE or FALSE.")
@@ -60,7 +60,7 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
     stop('File type not supported! Supporterd formats: "png", "jpeg", "tiff", "pdf", "svg", "ps", and "win".')
   
   # Loading Target-SNPs
-  if (length(snp.list) == 1 && snp.list == "all") {
+  if (length(snp.list) == 1 && is.null(snp.list)) {
     snp.list <- list.files(path = "snps/", all.files = TRUE)
     snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
     snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
@@ -68,9 +68,20 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
     snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
   }
   
+  # Setting Target-populations
+  if(!is.null(pop)) {
+    scanhh.list.ihs <- scanhh.list[pop]
+    names(scanhh.list.ihs) <- pop
+    available_pops <- sapply(scanhh.list.ihs, is.null, USE.NAMES = T)
+    if(any(available_pops)) {
+      stop('["', paste0(names(scanhh.list.ihs)[available_pops], collapse = ', "'), '"] not found in the dataset. ' )
+    } 
+  } else {
+    scanhh.list.ihs <- scanhh.list
+  }
   
   # Checking if there are any target-SNP on dataset
-  dataSNPs <- row.names(scanhh.list[[1]])
+  dataSNPs <- row.names(scanhh.list.ihs[[1]])
   available_SNPs <- intersect(dataSNPs, snp.list.data)
   if ( length(available_SNPs) == 0L ) stop("There are no target-SNPs in the dataset.")
   
@@ -83,7 +94,7 @@ ihs <- function(snp.list = "all", filter = 2, annot = T, write.xls = "both", plo
   
   # Computing iHS Statistics as described by Sabeti et al. 2007
   cat("\n Computing iHS Statistics... \n")
-  ld.ihs <- lapply(scanhh.list, rehh::ihh2ihs, freqbin = freqbin, minmaf = minmaf)
+  ld.ihs <- lapply(scanhh.list.ihs, rehh::ihh2ihs, freqbin = freqbin, minmaf = minmaf)
   
   # All SNPs
   ihs.snp.list <- lapply(ld.ihs, function(x) {
