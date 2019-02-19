@@ -65,192 +65,166 @@
 #'
 
 xpehh <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both", annot = T, write.xls = "both",
-    plot = T) {
-
-    # Computing XP-EHH Statistics as described by Sabeti et al. XXXX
-
-    if (missing(pop1)) {
-        stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop1 = scanhh_list$population1")
+                   plot = T, plot.format = "png") {
+  
+  if (missing(pop1)) {
+    stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop1 = scanhh_list$population1")
+  }
+  
+  if (missing(pop2)) {
+    stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop2 = scanhh_list$population2")
+  }
+  
+  if (missing(popname1)) {
+    popname1 <- comment(pop1)
+  }
+  
+  if (missing(popname2)) {
+    popname2 <- comment(pop2)
+  }
+  
+  if (!method %in% c("unilateral","bilateral","both"))
+    stop('method must be "unilateral", "bilateral", or "both".')
+  
+  if (!plot.format %in% c("png", "jpeg", "tiff", "pdf", "svg", "ps", "win"))
+    stop('File type not supported! Supporterd formats: "png", "jpeg", "tiff", "pdf", "svg", "ps", and "win".')
+  
+  if (length(snp.list) == 1 && snp.list == "all") {
+    snp.list <- list.files(path = "snps/", all.files = TRUE)
+    snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
+    snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
+  } else {
+    snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
+  }
+  
+  cat("\n Computing XP-EHH Statistics... \n")
+  dir.create(path = "rehh_out/xpehh", showWarnings = F)
+  dir.create(path = "rehh_out/xpehh/tables", showWarnings = F)
+  
+  if (method == "bilateral" || method == "both") {
+    
+    xpehh.bi <- rehh::ies2xpehh(pop1, pop2, popname1, popname2, method = "bilateral")
+    
+    xpehh.bi.snp.list <- xpehh.bi[row.names(xpehh.bi) %in% snp.list.data, ]
+    if(nrow(xpehh.bi.snp.list) == 0L) stop("\tNo target-SNPs present in this dataset.")
+    xpehh.bi.snp.list <- xpehh.bi.snp.list[complete.cases(xpehh.bi.snp.list), ]
+    if(nrow(xpehh.bi.snp.list) == 0L) stop("\tNo target-SNPs with available statistics are present in this dataset.")
+    
+    xpehh.bi.snp.list.stat <- xpehh.bi.snp.list[xpehh.bi.snp.list[, 3] >= filter | xpehh.bi.snp.list[, 3] <= -filter, ]
+    
+    data.table::fwrite(x = xpehh.bi.snp.list, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.csv"),
+                       quote = F, row.names = T, col.names = T)
+    data.table::fwrite(x = xpehh.bi.snp.list.stat, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.stat.csv"),
+                       quote = F, row.names = T, col.names = T)
+  }
+  
+  if (method == "unilateral" || method == "both") {
+    
+    xpehh.uni <- rehh::ies2xpehh(pop1, pop2, popname1, popname2, method = "unilateral")
+    
+    xpehh.uni.snp.list <- xpehh.uni[row.names(xpehh.uni) %in% snp.list.data, ]
+    if(nrow(xpehh.uni.snp.list) == 0L) stop("\tNo target-SNPs present in this dataset.")
+    xpehh.uni.snp.list <- xpehh.uni.snp.list[complete.cases(xpehh.uni.snp.list), ]
+    if(nrow(xpehh.uni.snp.list) == 0L) stop("\tNo target-SNPs with available statistics are present in this dataset.")
+    
+    xpehh.uni.snp.list.stat <- xpehh.uni.snp.list[xpehh.uni.snp.list[, 3] >= filter | xpehh.uni.snp.list[, 3] <= -filter, ]
+    
+    data.table::fwrite(xpehh.uni.snp.list, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.csv"),
+                       quote = F, row.names = T, col.names = T)
+    data.table::fwrite(xpehh.uni.snp.list.stat, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.stat.csv"),
+                       quote = F, row.names = T, col.names = T)
+  }
+  
+  ### Generating graphics ###
+  
+  if (plot == TRUE) {
+    
+    cat(" Plotting xpehh results... \n\n")
+    dir.create(path = "rehh_out/xpehh/graphics", showWarnings = FALSE)
+    
+    if(exists("xpehh.bi")) {
+      filename <- paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi")
+      xpehhplot(xpehh.data = xpehh.bi, file.name = filename, file.type = plot.format, main = names(xpehh.bi.snp.list)[3])
     }
-
-    if (missing(pop2)) {
-        stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop2 = scanhh_list$population2")
+    
+    if(exists("xpehh.uni")) {
+      filename <- paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni")
+      xpehhplot(xpehh.data = xpehh.uni, file.name = filename, file.type = plot.format, main = names(xpehh.uni.snp.list)[3])
     }
-
-    if (missing(popname1)) {
-        popname1 <- comment(pop1)
-    }
-
-    if (missing(popname2)) {
-        popname2 <- comment(pop2)
-    }
-
-    if (length(snp.list) == 1 && snp.list == "all") {
-        snp.list <- list.files(path = "snps/", all.files = TRUE)
-        snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
-        snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
-    } else {
-        snp.list.data <- unlist(lapply(X = snp.list, FUN = function(x) readLines(paste0("snps/", x))))
-    }
-
-    cat("\n Computing XP-EHH Statistics... \n")
-    dir.create(path = "rehh_out/xpehh", showWarnings = F)
-    dir.create(path = "rehh_out/xpehh/tables", showWarnings = F)
-
+    
+  }
+  
+  # SNP Annotation
+  
+  if (annot == T) {
+    load("haplotypes/haps-sample.RData")
+    haps.info.alleles <- data.table::rbindlist(haps.info)
+    
     if (method == "bilateral" || method == "both") {
-
-        xpehh.bi <- rehh::ies2xpehh(pop1, pop2, popname1, popname2, method = "bilateral")
-        xpehh.bi.snp.list <- xpehh.bi[row.names(xpehh.bi) %in% snp.list.data, ]
-        xpehh.bi.snp.list <- xpehh.bi.snp.list[complete.cases(xpehh.bi.snp.list), ]
-        xpehh.bi.snp.list.stat <- xpehh.bi.snp.list[xpehh.bi.snp.list[, 3] >= filter | xpehh.bi.snp.list[, 3] <= -filter, ]
-
-        data.table::fwrite(x = xpehh.bi.snp.list, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.csv"),
-        quote = F, row.names = T, col.names = T)
-        data.table::fwrite(x = xpehh.bi.snp.list.stat, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.stat.csv"),
-        quote = F, row.names = T, col.names = T)
-    }
-
-    if (method == "unilateral" || method == "both") {
-
-        xpehh.uni <- rehh::ies2xpehh(pop1, pop2, popname1, popname2, method = "unilateral")
-        xpehh.uni.snp.list <- xpehh.uni[row.names(xpehh.uni) %in% snp.list.data, ]
-        xpehh.uni.snp.list <- xpehh.uni.snp.list[complete.cases(xpehh.uni.snp.list), ]
-        xpehh.uni.snp.list.stat <- xpehh.uni.snp.list[xpehh.uni.snp.list[, 3] >= filter | xpehh.uni.snp.list[, 3] <= -filter, ]
-
-        data.table::fwrite(xpehh.uni.snp.list, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.csv"),
-        quote = F, row.names = T, col.names = T)
-        data.table::fwrite(xpehh.uni.snp.list.stat, file = paste0("./rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.stat.csv"),
-        quote = F, row.names = T, col.names = T)
-    }
-
-    ### Generating graphics ###
-
-    if (plot == TRUE) {
-        cat(" Plotting XPEHH results... \n\n")
-        dir.create(path = "rehh_out/xpehh/graphics", showWarnings = FALSE)
-
-        if(exists("xpehh.bi")) {
-          xpehh.list <- list(xpehh.bi)
-          names(xpehh.list) <- c("xpehh.bi")
-
-          par(mfrow = c(1, 1))
-          rehh::xpehhplot(xpehh.list$xpehh.bi, main = names(xpehh.bi.snp.list)[3])
-          dev.set(dev.prev())
-          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi.score.png"), type = "png")
-          dev.off()
-          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.bi.log.png"), type = "png")
-          dev.off()
-      }
-
-        if(exists("xpehh.uni")) {
-          xpehh.list <- list(xpehh.uni)
-          names(xpehh.list) <- c("xpehh.uni")
-
-          par(mfrow = c(1, 1))
-          rehh::xpehhplot(xpehh.list$xpehh.uni, main = names(xpehh.uni.snp.list)[3])
-          dev.set(dev.prev())
-          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.score.png"), type = "png")
-          dev.off()
-          savePlot(filename = paste0("rehh_out/xpehh/graphics/", popname1, ".vs.", popname2, ".xpehhplot.uni.log.png"), type = "png")
-          dev.off()
-      }
-    }
-
-    # SNP Annotation
-
-    if (annot == T) {
-      load("haplotypes/haps-sample.RData")
-      haps.info.alleles <- data.table::rbindlist(haps.info)
-
-
-      if (method == "bilateral" || method == "both") {
-
+      if(exists("xpehh.bi.snp.list")) {
+        
         if (write.xls == "all.snps" || write.xls == "both") {
-          tryCatch({
+          if( nrow(xpehh.bi.snp.list) > 0L ) {
             alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(xpehh.bi.snp.list), ]
             snpgenes <- snp.annot(rownames(xpehh.bi.snp.list))
             xpehh.bi.snp.list.ncbi.xls <- cbind(CHR = xpehh.bi.snp.list$CHR, SNP = rownames(xpehh.bi.snp.list),
-            Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.bi.snp.list[2:4])
-          }, error = function(e) {
-            cat("\tNo SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"all.snps\")\n")
-          })
-
-          if (exists("xpehh.bi.snp.list.ncbi.xls")) {
+                                                Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.bi.snp.list[2:4])
             file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.all.xls")
-            WriteXLS::WriteXLS(xpehh.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
-                               AdjWidth = T, BoldHeaderRow = T)
-            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.all.xls"),
-                       "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
+            WriteXLS::WriteXLS(xpehh.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.all.xls"),"' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
           } else {
-            message(paste0("\t", nrow(xpehh.bi.snp.list), "  SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
-          }
+            cat("\tNo SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"all.snps\")\n")
+          } 
         }
-
+        
         if (write.xls == "ss.snps" || write.xls == "both") {
-          tryCatch({
+          if( nrow(xpehh.bi.snp.list.stat) > 0L ) {
             alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(xpehh.bi.snp.list.stat), ]
             snpgenes <- snp.annot(rownames(xpehh.bi.snp.list.stat))
             xpehh.bi.snp.list.stat.ncbi.xls <- cbind(CHR = xpehh.bi.snp.list.stat$CHR, SNP = rownames(xpehh.bi.snp.list.stat),
-            Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.bi.snp.list.stat[2:4])
-          }, error = function(e) {
-            cat("\tNo statistically significant SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"ss.snps\")\n")
-          })
-
-          if (exists("xpehh.bi.snp.list.stat.ncbi.xls")) {
+                                                     Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.bi.snp.list.stat[2:4])
             file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.bi.stat.xls")
-            WriteXLS::WriteXLS(xpehh.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
-                               AdjWidth = T, BoldHeaderRow = T)
-            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.stat.xls"),
-                       "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
+            WriteXLS::WriteXLS(xpehh.bi.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.bi.all.xls"),"' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
           } else {
-            message(paste0("\t", nrow(xpehh.bi.snp.list.stat), "  SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
+            cat("\tNo SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"all.snps\")\n")
           }
+          
         }
       }
-
-      if (method == "unilateral" || method == "both") {
-
+    }
+    
+    if (method == "unilateral" || method == "both") {
+      if(exists("xpehh.uni.snp.list")) {
+        
         if (write.xls == "all.snps" || write.xls == "both") {
-          tryCatch({
+          if( nrow(xpehh.uni.snp.list) > 0L ) {
             alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(xpehh.uni.snp.list), ]
             snpgenes <- snp.annot(rownames(xpehh.uni.snp.list))
             xpehh.uni.snp.list.ncbi.xls <- cbind(CHR = xpehh.uni.snp.list$CHR, SNP = rownames(xpehh.uni.snp.list),
-            Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.uni.snp.list[2:4])
-          }, error = function(e) {
-            cat("\tNo SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"all.snps\")\n")
-          })
-
-          if (exists("xpehh.uni.snp.list.ncbi.xls")) {
+                                                 Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.uni.snp.list[2:4])
             file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.all.xls")
-            WriteXLS::WriteXLS(xpehh.uni.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
-                               AdjWidth = T, BoldHeaderRow = T)
-            cat(paste0(paste0("File '", popname1, ".vs.", popname2,
-                              ".xpehh.uni.all.xls"), "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
+            WriteXLS::WriteXLS(xpehh.uni.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.all.xls"),"' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
           } else {
-            message(paste0("\t", nrow(xpehh.uni.snp.list), " SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
+            cat("\tNo SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"all.snps\")\n")
           }
         }
-
+        
         if (write.xls == "ss.snps" || write.xls == "both") {
-          tryCatch({
+          if( nrow(xpehh.uni.snp.list.stat) > 0L ) {
             alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(xpehh.uni.snp.list.stat), ]
             snpgenes <- snp.annot(rownames(xpehh.uni.snp.list.stat))
             xpehh.uni.snp.list.stat.ncbi.xls <- cbind(CHR = xpehh.uni.snp.list.stat$CHR, SNP = rownames(xpehh.uni.snp.list.stat),
-            Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.uni.snp.list.stat[2:4])
-          }, error = function(e) {
-            cat("\tNo statistically significant SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"ss.snps\")\n")
-          })
-
-          if (exists("xpehh.uni.snp.list.stat.ncbi.xls")) {
+                                                      Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, xpehh.uni.snp.list.stat[2:4])
             file.name <- paste0("rehh_out/xpehh/tables/", popname1, ".vs.", popname2, ".xpehh.uni.stat.xls")
-            WriteXLS::WriteXLS(xpehh.uni.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis",
-                               AdjWidth = T, BoldHeaderRow = T)
-            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.stat.xls"),
-                       "' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
+            WriteXLS::WriteXLS(xpehh.uni.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "XP-EHH Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".xpehh.uni.stat.xls"),"' successfully saved into 'rehh_out/xpehh/tables/' directory \n"))
           } else {
-            message(paste0("\t", nrow(xpehh.uni.snp.list.stat), " SNP(s) remained after XP-EHH analysis for the SNPs analyzed\n"))
+            cat("\tNo SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"all.snps\")\n")
           }
         }
       }
     }
+  }
 }

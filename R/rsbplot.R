@@ -1,5 +1,5 @@
 rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, ylim.scan = 2, pch = 16, cex = 0.3, 
-          cex.lab = 1.25, main = NA, cex.main = 1.5, cex.axis = 1) {
+                     cex.lab = 1.25, main = NA, cex.main = 1.5, cex.axis = 1) {
   
   substrRight <- function(x, n) substr(x, nchar(x)-n+1, nchar(x))
   
@@ -53,7 +53,7 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
     dev.off()
     
     if (plot.pval) {
-   
+      
       # Plot
       filename <- ifelse(test = substrRight(file.name, 4L) == paste0(".", file.type), 
                          yes = paste0(file.name, ".rsbplot"), no = paste0(file.name, paste0(".log.", file.type)))
@@ -104,7 +104,7 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
     dev.off()
     
     if (plot.pval) {
- 
+      
       # Plot
       filename <- ifelse(test = substrRight(file.name, 4L) == paste0(".", file.type), 
                          yes = paste0(file.name, ".rsbplot"), no = paste0(file.name, paste0(".log.", file.type)))
@@ -118,7 +118,7 @@ rsbplot <- function (rsb.data, file.name, file.type = 'png', plot.pval = TRUE, y
       axis(1, at = pos_labels, labels = lst_chrm, las = 1, cex.lab = cex.lab, cex.axis = 0.5)
       abline(h = c(-ylim.scan, ylim.scan), lty = 2)
       dev.off()
-
+      
     }
   }
   

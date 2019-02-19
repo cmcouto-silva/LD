@@ -65,9 +65,7 @@
 #'
 
 rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, method = "both", annot = T, write.xls = "both",
-                plot = T) {
-  
-  # Computing Rsb Statistics as described by Sabeti et al. XXXX
+                 plot = T, plot.format = "png") {
   
   if (missing(pop1)) {
     stop("You must specify the populations in 'scanhh.list' file.\nExample:\n> load(scanhh.list)\n> pop1 = scanhh_list$population1")
@@ -85,6 +83,12 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, me
     popname2 <- comment(pop2)
   }
   
+  if (!method %in% c("unilateral","bilateral","both"))
+    stop('method must be "unilateral", "bilateral", or "both".')
+  
+  if (!plot.format %in% c("png", "jpeg", "tiff", "pdf", "svg", "ps", "win"))
+    stop('File type not supported! Supporterd formats: "png", "jpeg", "tiff", "pdf", "svg", "ps", and "win".')
+  
   if (length(snp.list) == 1 && snp.list == "all") {
     snp.list <- list.files(path = "snps/", all.files = TRUE)
     snp.list <- grep(pattern = "[[:alnum:]]", x = snp.list, value = TRUE)
@@ -100,8 +104,12 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, me
   if (method == "bilateral" || method == "both") {
     
     rsb.bi <- rehh::ies2rsb(pop1, pop2, popname1, popname2, method = "bilateral")
+    
     rsb.bi.snp.list <- rsb.bi[row.names(rsb.bi) %in% snp.list.data, ]
+    if(nrow(rsb.bi.snp.list) == 0L) stop("\tNo target-SNPs present in this dataset.")
     rsb.bi.snp.list <- rsb.bi.snp.list[complete.cases(rsb.bi.snp.list), ]
+    if(nrow(rsb.bi.snp.list) == 0L) stop("\tNo target-SNPs with available statistics are present in this dataset.")
+    
     rsb.bi.snp.list.stat <- rsb.bi.snp.list[rsb.bi.snp.list[, 3] >= filter | rsb.bi.snp.list[, 3] <= -filter, ]
     
     data.table::fwrite(x = rsb.bi.snp.list, file = paste0("./rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.csv"),
@@ -113,8 +121,12 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, me
   if (method == "unilateral" || method == "both") {
     
     rsb.uni <- rehh::ies2rsb(pop1, pop2, popname1, popname2, method = "unilateral")
+    
     rsb.uni.snp.list <- rsb.uni[row.names(rsb.uni) %in% snp.list.data, ]
+    if(nrow(rsb.uni.snp.list) == 0L) stop("\tNo target-SNPs present in this dataset.")
     rsb.uni.snp.list <- rsb.uni.snp.list[complete.cases(rsb.uni.snp.list), ]
+    if(nrow(rsb.uni.snp.list) == 0L) stop("\tNo target-SNPs with available statistics are present in this dataset.")
+    
     rsb.uni.snp.list.stat <- rsb.uni.snp.list[rsb.uni.snp.list[, 3] >= filter | rsb.uni.snp.list[, 3] <= -filter, ]
     
     data.table::fwrite(rsb.uni.snp.list, file = paste0("./rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.uni.csv"),
@@ -131,30 +143,15 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, me
     dir.create(path = "rehh_out/rsb/graphics", showWarnings = FALSE)
     
     if(exists("rsb.bi")) {
-      rsb.list <- list(rsb.bi)
-      names(rsb.list) <- c("rsb.bi")
-      
-      par(mfrow = c(1, 1))
-      rehh::rsbplot(rsb.list$rsb.bi, main = names(rsb.bi.snp.list)[3])
-      dev.set(dev.prev())
-      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi.score.png"), type = "png")
-      dev.off()
-      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi.log.png"), type = "png")
-      dev.off()
+      filename <- paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.bi")
+      rsbplot(rsb.data = rsb.bi, file.name = filename, file.type = plot.format, main = names(rsb.bi.snp.list)[3])
     }
     
     if(exists("rsb.uni")) {
-      rsb.list <- list(rsb.uni)
-      names(rsb.list) <- c("rsb.uni")
-      
-      par(mfrow = c(1, 1))
-      rehh::rsbplot(rsb.list$rsb.uni, main = names(rsb.uni.snp.list)[3])
-      dev.set(dev.prev())
-      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni.score.png"), type = "png")
-      dev.off()
-      savePlot(filename = paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni.log.png"), type = "png")
-      dev.off()
+      filename <- paste0("rehh_out/rsb/graphics/", popname1, ".vs.", popname2, ".rsbplot.uni")
+      rsbplot(rsb.data = rsb.uni, file.name = filename, file.type = plot.format, main = names(rsb.uni.snp.list)[3])
     }
+    
   }
   
   # SNP Annotation
@@ -163,93 +160,69 @@ rsb <- function(pop1, pop2, popname1, popname2, snp.list = "all", filter = 2, me
     load("haplotypes/haps-sample.RData")
     haps.info.alleles <- data.table::rbindlist(haps.info)
     
-    
     if (method == "bilateral" || method == "both") {
-      
-      if (write.xls == "all.snps" || write.xls == "both") {
-        tryCatch({
-          alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.bi.snp.list), ]
-          snpgenes <- snp.annot(rownames(rsb.bi.snp.list))
-          rsb.bi.snp.list.ncbi.xls <- cbind(CHR = rsb.bi.snp.list$CHR, SNP = rownames(rsb.bi.snp.list),
-                                            Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.bi.snp.list[2:4])
-        }, error = function(e) {
-          cat("\tNo SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"all.snps\")\n")
-        })
+      if(exists("rsb.bi.snp.list")) {
         
-        if (exists("rsb.bi.snp.list.ncbi.xls")) {
-          file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.all.xls")
-          WriteXLS::WriteXLS(rsb.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis",
-                             AdjWidth = T, BoldHeaderRow = T)
-          cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.bi.all.xls"),
-                     "' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
-        } else {
-          message(paste0("\t", nrow(rsb.bi.snp.list), "  SNP(s) remained after Rsb analysis for the SNPs analyzed\n"))
+        if (write.xls == "all.snps" || write.xls == "both") {
+          if( nrow(rsb.bi.snp.list) > 0L ) {
+            alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.bi.snp.list), ]
+            snpgenes <- snp.annot(rownames(rsb.bi.snp.list))
+            rsb.bi.snp.list.ncbi.xls <- cbind(CHR = rsb.bi.snp.list$CHR, SNP = rownames(rsb.bi.snp.list),
+                                              Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.bi.snp.list[2:4])
+            file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.all.xls")
+            WriteXLS::WriteXLS(rsb.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.bi.all.xls"),"' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
+          } else {
+            cat("\tNo SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"all.snps\")\n")
+          } 
         }
-      }
-      
-      if (write.xls == "ss.snps" || write.xls == "both") {
-        tryCatch({
-          alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.bi.snp.list.stat), ]
-          snpgenes <- snp.annot(rownames(rsb.bi.snp.list.stat))
-          rsb.bi.snp.list.stat.ncbi.xls <- cbind(CHR = rsb.bi.snp.list.stat$CHR, SNP = rownames(rsb.bi.snp.list.stat),
-                                                 Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.bi.snp.list.stat[2:4])
-        }, error = function(e) {
-          cat("\tNo statistically significant SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"ss.snps\")\n")
-        })
         
-        if (exists("rsb.bi.snp.list.stat.ncbi.xls")) {
-          file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.stat.xls")
-          WriteXLS::WriteXLS(rsb.bi.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis",
-                             AdjWidth = T, BoldHeaderRow = T)
-          cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.bi.stat.xls"),
-                     "' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
-        } else {
-          message(paste0("\t", nrow(rsb.bi.snp.list.stat), "  SNP(s) remained after Rsb analysis for the SNPs analyzed\n"))
+        if (write.xls == "ss.snps" || write.xls == "both") {
+          if( nrow(rsb.bi.snp.list.stat) > 0L ) {
+            alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.bi.snp.list.stat), ]
+            snpgenes <- snp.annot(rownames(rsb.bi.snp.list.stat))
+            rsb.bi.snp.list.stat.ncbi.xls <- cbind(CHR = rsb.bi.snp.list.stat$CHR, SNP = rownames(rsb.bi.snp.list.stat),
+                                                   Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.bi.snp.list.stat[2:4])
+            file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.bi.stat.xls")
+            WriteXLS::WriteXLS(rsb.bi.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.bi.all.xls"),"' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
+          } else {
+            cat("\tNo SNPs have been found in this dataset (method = \"bilateral\" & write.xls = \"all.snps\")\n")
+          }
+          
         }
       }
     }
     
     if (method == "unilateral" || method == "both") {
-      
-      if (write.xls == "all.snps" || write.xls == "both") {
-        tryCatch({
-          alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.uni.snp.list), ]
-          snpgenes <- snp.annot(rownames(rsb.uni.snp.list))
-          rsb.uni.snp.list.ncbi.xls <- cbind(CHR = rsb.uni.snp.list$CHR, SNP = rownames(rsb.uni.snp.list),
-                                             Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.uni.snp.list[2:4])
-        }, error = function(e) {
-          cat("\tNo SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"all.snps\")\n")
-        })
+      if(exists("rsb.uni.snp.list")) {
         
-        if (exists("rsb.uni.snp.list.ncbi.xls")) {
-          file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.uni.all.xls")
-          WriteXLS::WriteXLS(rsb.uni.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis",
-                             AdjWidth = T, BoldHeaderRow = T)
-          cat(paste0(paste0("File '", popname1, ".vs.", popname2,
-                            ".rsb.uni.all.xls"), "' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
-        } else {
-          message(paste0("\t", nrow(rsb.uni.snp.list), " SNP(s) remained after Rsb analysis for the SNPs analyzed\n"))
+        if (write.xls == "all.snps" || write.xls == "both") {
+          if( nrow(rsb.uni.snp.list) > 0L ) {
+            alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.uni.snp.list), ]
+            snpgenes <- snp.annot(rownames(rsb.uni.snp.list))
+            rsb.uni.snp.list.ncbi.xls <- cbind(CHR = rsb.uni.snp.list$CHR, SNP = rownames(rsb.uni.snp.list),
+                                               Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.uni.snp.list[2:4])
+            file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.uni.all.xls")
+            WriteXLS::WriteXLS(rsb.uni.snp.list.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.uni.all.xls"),"' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
+          } else {
+            cat("\tNo SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"all.snps\")\n")
+          }
         }
-      }
-      
-      if (write.xls == "ss.snps" || write.xls == "both") {
-        tryCatch({
-          alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.uni.snp.list.stat), ]
-          snpgenes <- snp.annot(rownames(rsb.uni.snp.list.stat))
-          rsb.uni.snp.list.stat.ncbi.xls <- cbind(CHR = rsb.uni.snp.list.stat$CHR, SNP = rownames(rsb.uni.snp.list.stat),
-                                                  Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.uni.snp.list.stat[2:4])
-        }, error = function(e) {
-          cat("\tNo statistically significant SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"ss.snps\")\n")
-        })
         
-        if (exists("rsb.uni.snp.list.stat.ncbi.xls")) {
-          file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.uni.stat.xls")
-          WriteXLS::WriteXLS(rsb.uni.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis",
-                             AdjWidth = T, BoldHeaderRow = T)
-          cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.uni.stat.xls"),
-                     "' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
-        } else {
-          message(paste0("\t", nrow(rsb.uni.snp.list.stat), " SNP(s) remained after Rsb analysis for the SNPs analyzed\n"))
+        if (write.xls == "ss.snps" || write.xls == "both") {
+          if( nrow(rsb.uni.snp.list.stat) > 0L ) {
+            alleles.state <- haps.info.alleles[haps.info.alleles$V2 %in% rownames(rsb.uni.snp.list.stat), ]
+            snpgenes <- snp.annot(rownames(rsb.uni.snp.list.stat))
+            rsb.uni.snp.list.stat.ncbi.xls <- cbind(CHR = rsb.uni.snp.list.stat$CHR, SNP = rownames(rsb.uni.snp.list.stat),
+                                                    Allele_A = alleles.state$V4, Allele_D = alleles.state$V5, GENE = snpgenes, rsb.uni.snp.list.stat[2:4])
+            file.name <- paste0("rehh_out/rsb/tables/", popname1, ".vs.", popname2, ".rsb.uni.stat.xls")
+            WriteXLS::WriteXLS(rsb.uni.snp.list.stat.ncbi.xls, ExcelFileName = file.name, SheetNames = "Rsb Analysis", AdjWidth = T, BoldHeaderRow = T)
+            cat(paste0(paste0("File '", popname1, ".vs.", popname2, ".rsb.uni.stat.xls"),"' successfully saved into 'rehh_out/rsb/tables/' directory \n"))
+          } else {
+            cat("\tNo SNPs have been found in this dataset (method = \"unilateral\" & write.xls = \"all.snps\")\n")
+          }
         }
       }
     }

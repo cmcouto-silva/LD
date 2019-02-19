@@ -1,5 +1,5 @@
 xpehhplot <- function (xpehh.data, file.name, file.type = 'png', plot.pval = TRUE, ylim.scan = 2, pch = 16, cex = 0.3, 
-                     cex.lab = 1.25, main = NA, cex.main = 1.5, cex.axis = 1) {
+                       cex.lab = 1.25, main = NA, cex.main = 1.5, cex.axis = 1) {
   
   substrRight <- function(x, n) substr(x, nchar(x)-n+1, nchar(x))
   
