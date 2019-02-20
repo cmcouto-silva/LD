@@ -29,8 +29,8 @@ set_anc_alleles <- function(sfile, ref, out) {
   sample <- paste0(sfile, ".sample")
   
   # Read refecence panel and Shapeit files
-  haps <- fread(haps)
-  sample <- fread(sample)
+  haps <- fread(haps, header = F)
+  sample <- fread(sample, header = F)
   colnames(haps)[1L:5L] <- c("CHR", "SNP", "POS", "A1", "A2")
   
   # Reading refecence panel

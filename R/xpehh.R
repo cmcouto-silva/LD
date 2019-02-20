@@ -64,7 +64,7 @@
 #' @export
 #'
 
-xpehh <- function(pop1, pop2, popname1, popname2, snp.list = NULL, filter = 2, method = "bilateral", annot = T, write.xls = "ss.snps",
+xpehh <- function(pop1, pop2, popname1, popname2, snp.list = NULL, filter = 2L, method = "bilateral", annot = T, write.xls = "ss.snps",
                    plot = T, plot.format = "png") {
   
   if(!plot %in% c(T,F))

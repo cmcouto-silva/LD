@@ -45,7 +45,7 @@
 #'
 #' @export
 
-ihs <- function(snp.list = NULL, pop = NULL, filter = 2, annot = T, write.xls = "both", plot = T, plot.format =  "png", freqbin = 0.025, minmaf = 0.05) {
+ihs <- function(snp.list = NULL, pop = NULL, filter = 2L, annot = T, write.xls = "both", plot = T, plot.format =  "png", freqbin = 0.025, minmaf = 0.05) {
   
   if(!plot %in% c(T,F))
     stop("plot must be TRUE or FALSE.")
