@@ -16,15 +16,15 @@ for accessing input files, as well as for delivering output files from LD analys
 \details{
 Running this function generates the following folders at current directory:
 'haplotypes', 'populations', 'snps', 'rehh_in', and 'rehh_out'. Users must place
-their data inside respective directories, as explained below:
+their data inside the respective directories, as explained below:
 
-'haploypes': The whole dataset of haplotypes (extensions .hap and .sample), usually
+'haplotypes': The whole dataset of haplotypes (extensions .hap and .sample) split by chromosomes,
 obtained by Shapeit Software (\url{http://www.shapeit.fr}).
 
 'populations': Text files from each population to be analyzed (one individual per line).
-File names must correspond to the names from populations (with or without .txt extension).
+File names must correspond to the names from populations (with or without ".txt" extension).
 
-'snps': Text files with a set of SNP ID's (e.g. rs1042522), with or without .txt extension
+'snps': Text files with a set of SNP ID's (e.g. rs1042522), with or without ".txt" extension
 (a single ID per line).
 }
 \examples{

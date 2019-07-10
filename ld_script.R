@@ -1,29 +1,23 @@
-# Package Working Directory
-setwd("~/cmcouto.silva@usp.br/R/packages/LD")
-devtools::document()
+#### LD PACKAGE  ####
+####################################################################################################!
 devtools::load_all()
 
+# Start and setting files
+ldstart()
 
-# setwd("~/cmcouto.silva@usp.br/lab_files/all_datasets/HGDP_NAM/ld_analysis/")
-#
-# if (!requireNamespace("devtools")) install.packages("devtools")
-# devtools::install_github("cmcouto-silva/LD")
-# library(LD)
-# gt::rm.all()
-#
-# # Initialization
-# ldstart()
-#
-# # Produce required files
-# make.binary.haplotypes()
-# make.input.files()
-# make.scanhh()
-#
-# # Load 'scanhh.list'
-# load("./scanhh.RData")
-#
-# # Computing Statistics and generating result files
-# ihs()
-# xpehh(scanhh.list$Han, scanhh.list$Nam)
-# rsb(scanhh.list$Han, scanhh.list$Nam)
+# Set populations & SNPs
+# populations and SNPs were manually settled
 
+## Main workflow
+
+# Produce required files
+make.binary.haplotypes()
+make.input.files()
+make.scanhh()
+
+# Load 'scanhh.list'
+load("./scanhh.RData")
+names(scanhh.list) <- c('AFR', 'EAS', 'EUR', 'MAY', 'MES', 'NAM', 'OCEANIA', 'PIMA', 'SIB', 'SKOG')
+
+# Computing Statistics and generating result files
+ihs(annot = F, plot = T, plot.format = "png")

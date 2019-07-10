@@ -4,10 +4,11 @@
 \alias{ihs}
 \title{Computes iHS Statistics (standardized IHH)}
 \usage{
-ihs(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T)
+ihs(snp.list = NULL, pop = NULL, filter = 2, annot = T, write.xls = "both", plot = T, plot.format =  "png", 
+freqbin = 0.025, minmaf = 0.05)
 }
 \arguments{
-\item{snp.list}{Character vector. It could be a scalar named "all" (default) for loading all SNPs
+\item{snp.list}{Character vector. If NULL (default), all SNPs
 present in 'snps' directory, or a character vector with the exact names from the target-SNP files
 (also supposed to be in 'populations' directory).}
 

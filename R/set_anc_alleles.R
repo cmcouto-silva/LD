@@ -67,7 +67,7 @@ set_anc_alleles <- function(sfile, ref, out) {
   haps.info[snp_inv, c('A1', 'A2'):= .(a2, a1)]
   
   # Merging info and genotypes
-  cbind2 <- function(...) (setattr(do.call(c,list(...)),"class",c("data.table","data.frame")))
+  cbind2 <- function(...) (setattr(do.call(c,list(...)), "class", c("data.table","data.frame")))
   haps <- cbind2(haps.info, haps)
   
   # Saving file

@@ -17,7 +17,7 @@ This function imports all haplotypes present in the 'haplotypes' directory,
 creating a single binary file for loading them all (as requested on subsequent functions).
 }
 \details{
-Haplotype file names must be start with "chr", followed by the chromosome ID
+Haplotype file names must start with "chr", followed by the chromosome ID
 (represented as Arabic numerals), then ending with either ".haps" or ".sample"
 extensions. Anything between the "chr[digit]" and the file extension can be written
 for population identification.
@@ -39,4 +39,7 @@ make.binary.haplotypes(chrs = c(2,9,10,15,21)) # analyzing specific chromosomes
 }
 \seealso{
 \code{\link{ldstart}}
+}
+\author{
+Cainã Max Couto-Silva
 }

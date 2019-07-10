@@ -2,9 +2,10 @@
 #'
 #' @description This function computes iHS Statistics (standardized IHH) for all target populations and SNPs.
 #'
-#' @usage ihs(snp.list = "all", filter = 2, annot = T, write.xls = "both", plot = T)
+#' @usage ihs(snp.list = NULL, pop = NULL, filter = 2, annot = T, write.xls = "both", plot = T, plot.format =  "png", 
+#' freqbin = 0.025, minmaf = 0.05)
 #'
-#' @param snp.list Character vector. It could be a scalar named "all" (default) for loading all SNPs
+#' @param snp.list Character vector. If NULL (default), all SNPs
 #' present in 'snps' directory, or a character vector with the exact names from the target-SNP files
 #' (also supposed to be in 'populations' directory).
 #' @param filter Numeric value for filtering significant iHS scores (default = 2).
@@ -16,7 +17,7 @@
 #' (defined by 'filter' argument), or 'both' (default) for both annotation outputs.
 #' @param plot Logical scalar. If TRUE (default), then distribution plots are generated and saved
 #' as png figures.
-#'
+#' 
 #' @details
 #' All populations included in 'scanhh.RData' will be analyzed. This function creates a new directory in
 #' 'rehh_out' folder, named 'ihs', with two sub-directories: 'ihs/graphics' for plots, and 'ihs/tables'
