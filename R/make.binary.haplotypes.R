@@ -48,8 +48,8 @@ make.binary.haplotypes <- function(chrs = 1:22) {
   if (missing(chrs)) chrs <- 1:22
   
   for (i in 1:length(chrs)) {
-    files[i] <- gtools::mixedsort(list.files(path = "haplotypes", pattern = paste0("^chr", chrs[i], "[[:alpha:][:punct:][:blank:]].*\\.haps$")))
-    ids[i] <- gtools::mixedsort(list.files(path = "haplotypes", pattern = paste0("^chr", chrs[i], "[[:alpha:][:punct:][:blank:]].*\\.sample$")))
+    files[i] <- gtools::mixedsort(list.files(path = "haplotypes", pattern = paste0("^chr", chrs[i], "[^0-9+]*\\.haps$")))
+    ids[i] <- gtools::mixedsort(list.files(path = "haplotypes", pattern = paste0("^chr", chrs[i], "[^0-9+]*\\.sample$")))
   }
   
   # Specifying chromosomes to be analyzed
