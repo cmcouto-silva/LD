@@ -63,7 +63,7 @@ make.scanhh <- function(populations = "all", chrs = 1:22, output) {
     for (n in 1:length(populations)) {
       cat(paste0("\n# Population under analysis: ", output[n], "\n\n"))
       for (i in 1:length(chrs)) {
-        haplohh <- rehh::data2haplohh(hap_file = paste0("./rehh_in/chr", chrs[i], "_", names(output)[n], ".rehh.thap"),
+        haplohh <- rehh::data2haplohh(hap_file = paste0("./rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap"),
                                       map_file <- "./rehh_in/mapfileR.inp", chr.name = chrs[i], haplotype.in.columns = TRUE)
         results <- rehh::scan_hh(haplohh)
         if (chrs[i] == min(chrs)) {
