@@ -52,7 +52,7 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
     }
 
     populations.data <- lapply(X = populations, FUN = function(x) readLines(paste0("populations/", x)))
-    populations <- rm.txt(populations)
+    populations <- LD:::rm.txt(populations)
 
     if (missing(output)) output <- populations
 
@@ -133,7 +133,7 @@ make.input.files <- function(populations = "all", chrs = 1:22, haps.subset = F, 
       for (n in 1:length(populations.data)) {
         for (i in 1:length(chrs)) {
           system(paste0("tr 01 12 < rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap > rehh_in/chr", chrs[i],
-                        ".thap && mv rehh_in/chr", chrs[i], ".thap rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap; done"))
+                        ".thap && mv rehh_in/chr", chrs[i], ".thap rehh_in/chr", chrs[i], "_", output[n], ".rehh.thap"))
         }
       }
 
